@@ -2,7 +2,7 @@ using System;
 
 namespace RecipeManager.WebApp.Entities
 {
-    public class Ingredient : DataObject
+    public class RecipeIngredient : DataObject
     {
         public int Ordinal { get; set; }
         public Guid RecipeId { get; set; }

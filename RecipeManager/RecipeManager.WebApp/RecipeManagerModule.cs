@@ -1,6 +1,9 @@
+using System.Reflection;
 using Autofac;
+using RecipeManager.WebApp.Data;
 using RecipeManager.WebApp.Entities;
 using RecipeManager.WebApp.Services;
+using Module = Autofac.Module;
 
 namespace RecipeManager.WebApp
 {
@@ -12,7 +15,14 @@ namespace RecipeManager.WebApp
             base.Load(builder);
 
             builder.RegisterType<Database>().As<IDatabase>().WithParameter("connectionString", ConnectionString);
-            builder.RegisterType<RecipeRepository>().As<IDataRepository<Recipe>>();
+   
+            builder.RegisterAssemblyTypes(ThisAssembly)
+                .Where(t => t.Name.EndsWith("Repository"))
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(ThisAssembly)
+                .Where(t => t.Name.EndsWith("Service"))
+                .AsImplementedInterfaces();
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RecipeManager.WebApp.Data;
 using RecipeManager.WebApp.Entities;
 using RecipeManager.WebApp.Services;
 
@@ -13,9 +14,9 @@ namespace RecipeManager.WebApp.Controllers
     [Route("api/Recipes")]
     public class RecipeController : Controller
     {
-        private IDataRepository<Recipe> Repository { get; set; }
+        private IRecipeRepository Repository { get; set; }
 
-        public RecipeController(IDataRepository<Recipe> recipeDataRepository)
+        public RecipeController(IRecipeRepository recipeDataRepository)
         {
             Repository = recipeDataRepository;
         }
@@ -30,7 +31,7 @@ namespace RecipeManager.WebApp.Controllers
         [HttpGet("{key}", Name = "Get")]
         public async Task<IActionResult> Get(string key)
         {
-            return Ok(await Repository.Get(key));
+            return Ok(await Repository.GetByKey(key));
         }
         
         // POST: api/Recipe

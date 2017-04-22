@@ -1,53 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
+using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
-using RecipeManager.WebApp.Entities;
-using Npgsql;
 using Dapper;
+using RecipeManager.WebApp.Data;
+using RecipeManager.WebApp.Entities;
 
 namespace RecipeManager.WebApp.Services
 {
-    public interface IDataRepository<T>
-    {
-        Task<T> Create(T item);
-        Task<IEnumerable<T>> GetAll();
-        Task<T> Update(T item);
-        Task<T> Get(Guid id);
-        Task<T> Get(string key);
-        Task Delete(T item);
-    }
-
- 
-    public interface IDatabase
-    {
-        NpgsqlConnection Connection { get; set; }
-        Task Connect();
-    }
-
-    public class Database : IDatabase
-    {
-        private string ConnectionString { get; set; }
-
-        public Database(string connectionString)
-        {
-            ConnectionString = connectionString;            
-        }
-
-        public async Task Connect()
-        {
-            if(Connection == null || Connection.State != ConnectionState.Open)
-                Connection = new NpgsqlConnection(ConnectionString);
-
-            await Connection.OpenAsync();
-        }
-
-        public NpgsqlConnection Connection { get; set; }
-    }
-    public class RecipeRepository : IDataRepository<Recipe>
+    public class RecipeRepository : IRecipeRepository
     { 
         private IDatabase Database { get; set; }
 
@@ -72,13 +32,30 @@ namespace RecipeManager.WebApp.Services
                 notes = item.Notes,
                 createdby = item.CreatedBy
             };
-
+            await Database.Connect();
             return await Database.Connection.QuerySingleOrDefaultAsync<Recipe>(query, values);
         }
 
         public async Task<Recipe> Update(Recipe item)
         {
-            throw new NotImplementedException();
+            var query =
+                @"update recipes set title = @title, key = @key, tags = @tags, description = @description, notes = @notes, modifieddate = @modifieddate,  modifiedby = @modifiedby
+                            where id = @id
+                          returning *;";
+
+            var values = new
+            {
+                id = item.Id,
+                title = item.Title,
+                key = item.Key,
+                description = item.Description,
+                notes = item.Notes,
+                modifieddate = item.ModifiedDate,
+                modifiedby = item.ModifiedBy,
+            };
+
+            await Database.Connect();
+            return await Database.Connection.QuerySingleOrDefaultAsync<Recipe>(query, values);
         }
 
         public async Task<Recipe> Get(Guid id)
@@ -86,7 +63,7 @@ namespace RecipeManager.WebApp.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Recipe> Get(string key)
+        public async Task<Recipe> GetByKey(string key)
         {
             await Database.Connect();
             return await Database.Connection.QueryFirstOrDefaultAsync<Recipe>("select * from recipes where key = @key;", new { key = key });
