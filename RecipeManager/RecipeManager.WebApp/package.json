@@ -1,0 +1,35 @@
+{
+  "name": "recipemanager",
+  "version": "0.1.0",
+  "description": "A Recipe management web app",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack -d --display-error-details --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myfamilycooks/recipemanager.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/myfamilycooks/recipemanager/issues"
+  },
+  "homepage": "https://github.com/myfamilycooks/recipemanager#readme",
+  "dependencies": {
+    "oidc-client": "^1.3.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.5.4",
+    "react-google-login": "^2.8.7"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.0",
+    "babel-loader": "^6.4.1",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-react": "^6.23.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "webpack": "^2.3.2",
+    "webpack-combine-loaders": "^2.0.3"
+  }
+}

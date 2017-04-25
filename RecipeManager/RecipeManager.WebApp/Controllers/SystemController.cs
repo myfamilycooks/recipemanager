@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,6 +23,14 @@ namespace RecipeManager.WebApp.Controllers
         public async Task<IActionResult> Get()
         {
             return Ok(new {App = "Recipe Manager"});
+        }
+
+        [HttpGet]
+        [Route("WhoAmI")]
+        [Authorize]
+        public async Task<IActionResult> WhoAmI()
+        {
+            return Ok(from c in User.Claims select new { c.Type, c.Value });
         }
     }
 }
