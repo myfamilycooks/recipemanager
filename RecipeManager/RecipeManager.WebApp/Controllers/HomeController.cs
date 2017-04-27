@@ -13,15 +13,11 @@ namespace RecipeManager.WebApp.Controllers
             return View();
         }
 
-        public IActionResult Ids()
+        public IActionResult Index()
         {
             return View();
         }
-
-        public IActionResult Callback()
-        {
-            return View();
-        }
+        
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

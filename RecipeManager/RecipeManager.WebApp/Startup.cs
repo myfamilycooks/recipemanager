@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using RecipeManager.WebApp.Config;
+using Microsoft.Extensions.Logging; 
 
 namespace RecipeManager.WebApp
 {
@@ -28,13 +27,6 @@ namespace RecipeManager.WebApp
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityServer()
-                .AddTemporarySigningCredential()
-                .AddInMemoryApiResources(IdentityServerConfig.GetApiResources())
-                .AddInMemoryClients(IdentityServerConfig.GetClients())
-                .AddTestUsers(IdentityServerConfig.GetUsers())
-                .AddInMemoryIdentityResources(IdentityServerConfig.GetIdentityResources());
-
             services.AddSingleton(_ => Configuration);
 
             services.AddMvc();
@@ -68,16 +60,7 @@ namespace RecipeManager.WebApp
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseIdentityServer();
             app.UseStaticFiles();
-
-            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-            {
-                Authority = "http://localhost:5000",
-                RequireHttpsMetadata = false,
-
-                ApiName = "api1"
-            });
 
             app.UseMvc(routes =>
             {
