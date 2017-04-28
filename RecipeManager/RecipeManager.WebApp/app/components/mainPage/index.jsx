@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import userManager from '../../utils/userManager';
 
 class MainPage extends React.Component {
-
+constructor(props) {
+    super(props);
+    this.showUserInfoButtonClick= this.showUserInfoButtonClick.bind(this);
+}
   // display the current user
   showUserInfoButtonClick(event) {
     event.preventDefault();

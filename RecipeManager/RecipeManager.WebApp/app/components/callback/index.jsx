@@ -5,6 +5,10 @@ import { push } from 'react-router-redux';
 import userManager from '../../utils/userManager';
 
 class CallbackPage extends React.Component {
+  constructor(props) {
+    super(props)
+    this.successCallback = this.successCallback.bind(this);
+  }
   successCallback(){
     this.props.dispatch(push('/'));
   }
