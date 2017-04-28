@@ -61,7 +61,7 @@ namespace RecipeManager.WebApp
             }
 
             app.UseStaticFiles();
-
+            app.UseStatusCodePagesWithReExecute("/");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

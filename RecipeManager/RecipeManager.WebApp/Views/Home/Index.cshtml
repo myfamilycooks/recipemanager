@@ -1,16 +1,10 @@
 
 @{
-    ViewData["Title"] = "Ids";
+    ViewData["Title"] = "Index";
 }
 
-<h2>Ids</h2>
-<button id="login">Login</button>
-<button id="api">Call API</button>
-<button id="logout">Logout</button>
-
-<pre id="results"></pre>
-
+<div id="app"></div>
 @section scripts {
-    <script src="/js/oidc-client.js"></script>
-    <script src="/js/ids.js"></script>
+    <script src="/lib/vendor.bundle.js"></script>
+    <script src="/lib/app.bundle.js"></script>
 }

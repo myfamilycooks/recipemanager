@@ -7,7 +7,7 @@ var APP_DIR = path.resolve(__dirname, 'app');
 var helpers = require('./helpers');
 var config = {
     entry: {
-        app: APP_DIR + '/index.jsx',
+        app: [ 'babel-polyfill', APP_DIR + '/index.jsx'],
     },
     output: {
         path: BUILD_DIR,
@@ -22,7 +22,10 @@ var config = {
                 loader: 'babel-loader',
                 query:
                 {
-                    presets: ['react']
+                    presets: ['react'],
+                    plugins: [
+                        'transform-regenerator'
+                    ]
                 }
             },
             { test: /\.css$/, loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: 'css-loader' }) },

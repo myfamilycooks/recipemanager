@@ -1,26 +1,18 @@
+
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
+import App from './components/app';
 
-import GoogleLogin from 'react-google-login';
+// you'll need this for older browsers
+require('es6-promise').polyfill();
 
-class App extends React.Component {
-    
-    responseGoogle(response) {
-        console.log(response);
-    }
-    render() {
-        return (
-            <div className="container body-content"> 
-                <p>Hello React!</p>
-                 <GoogleLogin
-                    clientId="229269924386-ogl3ksdn474fn3bau6v6fr8ki221saa9.apps.googleusercontent.com"
-                    buttonText="Login"
-                    onSuccess={this.responseGoogle}
-                    onFailure={this.responseGoogle}
-                />
-            </div> 
-        );
-    }
+const styles = {
+  root: {
+    fontFamily:'"Roboto", sans-serif',
+    background: '#fff',
+    display: 'flex',
+    alignItems: 'center'
+  }
 }
 
-render(<App/>, document.getElementById('app'));
+ReactDOM.render(<App/>, document.getElementById('app'));

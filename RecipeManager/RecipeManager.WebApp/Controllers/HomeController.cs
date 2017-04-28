@@ -13,6 +13,8 @@ namespace RecipeManager.WebApp.Controllers
             return View();
         }
 
+        [Route("~/")]
+        [Route("~/callback")]
         public IActionResult Index()
         {
             return View();
