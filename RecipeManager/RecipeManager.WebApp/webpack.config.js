@@ -13,7 +13,9 @@ var config = {
         path: BUILD_DIR,
         filename: 'app.bundle.js'
     },
+    devtool: 'eval-source-map',
     module: {
+        
         loaders: [
             {
                 test: /\.jsx$/,
@@ -37,6 +39,33 @@ var config = {
         extensions: ['.js', '.jsx'],
     },
     plugins: [
+        
+        new webpack.DefinePlugin({ // <-- key to reducing React's size
+            'process.env': {
+                'NODE_ENV': JSON.stringify('production')
+            }
+        }),
+
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false,
+                screw_ie8: true,
+                conditionals: true,
+                unused: true,
+                comparisons: true,
+                sequences: true,
+                dead_code: true,
+                evaluate: true,
+                if_return: true,
+                join_vars: true
+            },
+            output: {
+                comments: false
+            },
+            sourceMap: true
+        }),
+        new webpack.optimize.AggressiveMergingPlugin(),//Merge chunks 
+        new webpack.optimize.OccurrenceOrderPlugin(true),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor',
             filename: 'vendor.bundle.js',
