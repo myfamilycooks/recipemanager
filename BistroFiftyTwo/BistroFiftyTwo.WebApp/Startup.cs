@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,9 +33,33 @@ namespace BistroFiftyTwo.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
             services.AddMvc();
-            services.AddAuthentication();
+            services.AddDbContext<DbContext>(options =>
+            {
+                // Configure the context to use an in-memory store.
+                options.UseInMemoryDatabase();
+                // Register the entity sets needed by OpenIddict.
+                // Note: use the generic overload if you need
+                // to replace the default OpenIddict entities.
+                options.UseOpenIddict();
+            });
+            services.AddOpenIddict(options =>
+            {
+                // Register the Entity Framework stores.
+                options.AddEntityFrameworkCoreStores<DbContext>();
+                // Register the ASP.NET Core MVC binder used by OpenIddict.
+                // Note: if you don't call this method, you won't be able to
+                // bind OpenIdConnectRequest or OpenIdConnectResponse parameters.
+                options.AddMvcBinders();
+                // Enable the token endpoint.
+                options.EnableTokenEndpoint("/connect/token");
+                // Enable the password flow.
+                options.AllowPasswordFlow()
+                    .AllowRefreshTokenFlow();
+             
+                // During development, you can disable the HTTPS requirement.
+                options.DisableHttpsRequirement();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,98 +80,27 @@ namespace BistroFiftyTwo.WebApp
 
             app.UseStaticFiles();
 
-            app.UseWhen(context => context.Request.Path.StartsWithSegments(new PathString("/api")), branch =>
-            {
-                branch.UseCors(builder =>
-                {
-                    builder.AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-                });
+            //app.UseWhen(context => context.Request.Path.StartsWithSegments(new PathString("/api")), branch =>
+            //{
+            //    branch.UseCors(builder =>
+            //    {
+            //        builder.AllowAnyOrigin()
+            //        .AllowAnyHeader()
+            //        .AllowAnyMethod();
+            //    });
 
-                branch.UseOAuthValidation(new OAuthValidationOptions
-                {
-                    AutomaticAuthenticate = true,
-                    AutomaticChallenge = true
-                });
-            });
+            //    branch.UseOAuthValidation(new OAuthValidationOptions
+            //    {
+            //        AutomaticAuthenticate = true,
+            //        AutomaticChallenge = true
+            //    });
+           // });
 
-            app.UseOpenIdConnectServer(options =>
-            {
-                options.TokenEndpointPath = "/connect/token";
-                options.AllowInsecureHttp = true;
-                options.SigningCredentials.AddEphemeralKey();
-                options.Provider.OnValidateTokenRequest = context =>
-                {
-                    if (!context.Request.IsPasswordGrantType() && !context.Request.IsRefreshTokenGrantType())
-                    {
-                        context.Reject(
-                            OpenIdConnectConstants.Errors.UnsupportedGrantType,
-                            "Only grant_type=password and refresh_token " +
-                            "requests are accepted by this server.");
-
-                        return Task.FromResult(0);
-                    }
-
-                    context.Skip();
-
-                    return Task.FromResult(0);
-                };
-                // Implement OnHandleTokenRequest to support token requests.
-                options.Provider.OnHandleTokenRequest = context =>
-                {
-                    // Only handle grant_type=password token requests and let the
-                    // OpenID Connect server middleware handle the other grant types.
-                    if (context.Request.IsPasswordGrantType())
-                    {
-                        // Implement context.Request.Username/context.Request.Password validation here.
-                        // Note: you can call context Reject() to indicate that authentication failed.
-                        // Using password derivation and time-constant comparer is STRONGLY recommended.
-                        if (!string.Equals(context.Request.Username, "chef", StringComparison.Ordinal) ||
-                            !string.Equals(context.Request.Password, "mustard", StringComparison.Ordinal))
-                        {
-                            context.Reject(
-                                OpenIdConnectConstants.Errors.InvalidGrant,
-                                "Invalid user credentials.");
-
-                            return Task.FromResult(0);
-                        }
-
-                        var identity = new ClaimsIdentity(context.Options.AuthenticationScheme,
-                            OpenIdConnectConstants.Claims.Name,
-                            OpenIdConnectConstants.Claims.Role);
-
-                        // Add the mandatory subject/user identifier claim.
-                        identity.AddClaim(OpenIdConnectConstants.Claims.Subject, $"{Guid.NewGuid()}");
-
-                        // By default, claims are not serialized in the access/identity tokens.
-                        // Use the overload taking a "destinations" parameter to make sure
-                        // your claims are correctly inserted in the appropriate tokens.
-                        identity.AddClaim("urn:properName", "Chef Hetfield",
-                            OpenIdConnectConstants.Destinations.AccessToken,
-                            OpenIdConnectConstants.Destinations.IdentityToken);
-                        identity.AddClaim("urn:email", "chef@myfamilycooks.com",
-                            OpenIdConnectConstants.Destinations.AccessToken,
-                            OpenIdConnectConstants.Destinations.IdentityToken);
-
-                        var ticket = new AuthenticationTicket(
-                            new ClaimsPrincipal(identity),
-                            new AuthenticationProperties(),
-                            context.Options.AuthenticationScheme);
-
-                        // Call SetScopes with the list of scopes you want to grant
-                        // (specify offline_access to issue a refresh token).
-                        ticket.SetScopes(
-                            /* openid: */ OpenIdConnectConstants.Scopes.OpenId,
-                            OpenIdConnectConstants.Scopes.Profile,
-                            OpenIdConnectConstants.Scopes.OfflineAccess);
-
-                        context.Validate(ticket);
-                    }
-
-                    return Task.FromResult(0);
-                };
-            });
+            // Register the validation middleware, that is used to decrypt
+            // the access tokens and populate the HttpContext.User property.
+            app.UseOAuthValidation();
+            // Register the OpenIddict middleware.
+            app.UseOpenIddict();
 
             app.UseMvc(routes =>
             {
