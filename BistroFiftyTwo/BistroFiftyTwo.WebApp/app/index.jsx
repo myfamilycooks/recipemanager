@@ -6,6 +6,8 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import reduxthunk from 'redux-thunk';
 import App from './components/app';
 import Login from './components/auth/login';
+import Logout from './components/auth/logout';
+import Register from './components/auth/register';
 import Landing from './components/portal/landing';
 import reducers from './reducers';
 
@@ -16,6 +18,8 @@ ReactDOM.render(
     <Router history = { hashHistory }>
       <Route path = "/" component = { App }>
         <Route path="/login" component={Login} />
+        <Route path="/logout" component={Logout} />
+        <Route path="/register" component={Register} />
         <Route path="/portal" component={Landing} />
       </Route>
     </Router>

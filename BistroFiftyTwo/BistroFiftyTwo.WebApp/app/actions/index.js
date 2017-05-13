@@ -1,9 +1,16 @@
 import axios from 'axios';
 import querystring from 'querystring';
 import { hashHistory } from 'react-router';
-import { AUTH_USER, LOGIN_ERROR } from './types';
+import { AUTH_USER, DEAUTH_USER, LOGIN_ERROR } from './types';
 
 const ROOT_URL = ''; // we're using the same app, but that could change.
+
+export function logOutUser() {
+  localStorage.removeItem('token');
+  return {
+    type: DEAUTH_USER
+  };
+}
 
 export function loginUser({userid, password}) {
   return function(dispatch) {

@@ -9,22 +9,13 @@ class LoginPage extends React.Component {
 
   render() {
     return (
-      <div style={styles.root}>
+        
+      <div>
         <h3>Welcome to the redux-oidc sample app!</h3>
         <p>Please log in to continue</p>
         <button onClick={this.onLoginButtonClick}>Login with Google</button>
       </div>
     );
-  }
-}
-
-const styles = {
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    flexShrink: 1,
   }
 }
 

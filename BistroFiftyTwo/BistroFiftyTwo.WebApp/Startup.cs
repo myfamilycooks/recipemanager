@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AspNet.Security.OAuth.Validation;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,8 +21,8 @@ namespace BistroFiftyTwo.WebApp
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -41,7 +41,7 @@ namespace BistroFiftyTwo.WebApp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            loggerFactory.AddDebug(LogLevel.Debug);
 
             if (env.IsDevelopment())
             {
@@ -55,18 +55,35 @@ namespace BistroFiftyTwo.WebApp
 
             app.UseStaticFiles();
 
+            app.UseWhen(context => context.Request.Path.StartsWithSegments(new PathString("/api")), branch =>
+            {
+                branch.UseCors(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+
+                branch.UseOAuthValidation(new OAuthValidationOptions
+                {
+                    AutomaticAuthenticate = true,
+                    AutomaticChallenge = true
+                });
+            });
+
             app.UseOpenIdConnectServer(options =>
             {
                 options.TokenEndpointPath = "/connect/token";
                 options.AllowInsecureHttp = true;
+                options.SigningCredentials.AddEphemeralKey();
                 options.Provider.OnValidateTokenRequest = context =>
                 {
                     if (!context.Request.IsPasswordGrantType() && !context.Request.IsRefreshTokenGrantType())
                     {
                         context.Reject(
-                            error: OpenIdConnectConstants.Errors.UnsupportedGrantType,
-                            description: "Only grant_type=password and refresh_token " +
-                                         "requests are accepted by this server.");
+                            OpenIdConnectConstants.Errors.UnsupportedGrantType,
+                            "Only grant_type=password and refresh_token " +
+                            "requests are accepted by this server.");
 
                         return Task.FromResult(0);
                     }
@@ -89,8 +106,8 @@ namespace BistroFiftyTwo.WebApp
                             !string.Equals(context.Request.Password, "mustard", StringComparison.Ordinal))
                         {
                             context.Reject(
-                                error: OpenIdConnectConstants.Errors.InvalidGrant,
-                                description: "Invalid user credentials.");
+                                OpenIdConnectConstants.Errors.InvalidGrant,
+                                "Invalid user credentials.");
 
                             return Task.FromResult(0);
                         }
@@ -134,8 +151,8 @@ namespace BistroFiftyTwo.WebApp
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
