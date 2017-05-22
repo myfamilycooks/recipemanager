@@ -1,7 +1,7 @@
 import axios from 'axios';
 import querystring from 'querystring';
 import { hashHistory } from 'react-router';
-import { AUTH_USER, DEAUTH_USER, LOGIN_ERROR } from './types';
+import { AUTH_USER, DEAUTH_USER, LOGIN_ERROR, LOAD_PROFILE } from './types';
 
 const ROOT_URL = ''; // we're using the same app, but that could change.
 
@@ -57,5 +57,19 @@ export function registerUser(user) {
             fullname,
             email
         });
+    }
+}
+
+export function loadProfile() {
+    return function(dispatch) {
+        const token = JSON.parse(localStorage.getItem('token'));
+        axios.get(`${ROOT_URL}/api/profile/whoami`, { headers: { Authorization: `Bearer ${token.access_token}` } }).then(response => {
+            dispatch({ type: LOAD_PROFILE, profile: response.data });
+        }).catch(err => console.error(err));
+    }
+
+    return {
+        type: LOAD_PROFILE,
+        payload: request
     }
 }

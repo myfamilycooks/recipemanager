@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -34,6 +35,14 @@ namespace BistroFiftyTwo.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            //services.AddEntityFramework()
+            //    .AddEntityFrameworkNpgsql()
+            //    .AddDbContext<DbContext>(options =>
+            //    {
+            //        options.UseNpgsql(Configuration["Data:IdentityConnection"]);
+            //        options.UseOpenIddict();
+            //    });
+            //    options.UseNpgsql(Configuration["Data:DefaultConnection"]));
             services.AddDbContext<DbContext>(options =>
             {
                 // Configure the context to use an in-memory store.
@@ -43,6 +52,8 @@ namespace BistroFiftyTwo.WebApp
                 // to replace the default OpenIddict entities.
                 options.UseOpenIddict();
             });
+
+
             services.AddOpenIddict(options =>
             {
                 // Register the Entity Framework stores.

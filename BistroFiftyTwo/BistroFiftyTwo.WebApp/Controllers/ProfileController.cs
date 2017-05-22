@@ -16,9 +16,10 @@ namespace BistroFiftyTwo.WebApp.Controllers
     public class ProfileController : Controller
     {
         [Route("whoami")]
+        [Authorize]
         public async Task<IActionResult> WhoAmI()
         {
-            return Ok(new {chef = "James Hetfield", Band = "Metallica"});
+            return Ok(new {user = new { chef = "James Hetfield", Band = "Metallica"}});
         }
 
         [Authorize, HttpGet("~/api/test")]

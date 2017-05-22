@@ -6,6 +6,7 @@ import Header from '../header';
 class Register extends React.Component {
   handleFormSubmit(formProps) {
     // call action creator to sign up the user!
+    this.props.registerUser(formProps);
   }
 
 
@@ -63,10 +64,10 @@ function validate(formProps) {
   const errors = {};
 
   if(!formProps.fullname) {
-    errors.fullname = "Please enter an fullname";
+    errors.fullname = "Please enter your full name";
   }
   if(!formProps.userid) {
-    errors.userid = "Please enter an userid";
+    errors.userid = "Please enter a user id";
   }
   if(!formProps.email) {
     errors.email = "Please enter an email";
