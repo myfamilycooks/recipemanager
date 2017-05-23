@@ -59,16 +59,7 @@ export function registerUser(user) {
         });
     }
 }
-/*
-export function loadProfile() {
-    return function(dispatch) {
-        const token = JSON.parse(localStorage.getItem('token'));
-        axios.get(`${ROOT_URL}/api/profile/whoami`, { headers: { Authorization: `Bearer ${token.access_token}` } }).then(response => {
-            dispatch({ type: LOAD_PROFILE, profile: response.data });
-        }).catch(err => console.error(err));
-    }
-}
-*/
+ 
 export function profileHasErrored(bool, err) {
     return { 
         type: PROFILE_HAS_ERRORED, 
