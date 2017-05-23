@@ -8,11 +8,18 @@ namespace RecipeManager.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Start()
         {
             return View();
         }
 
+        [Route("~/")]
+        [Route("~/callback")]
+        public IActionResult Index()
+        {
+            return View();
+        }
+        
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -27,9 +34,5 @@ namespace RecipeManager.WebApp.Controllers
             return View();
         }
 
-        public IActionResult Error()
-        {
-            return View();
-        }
     }
 }

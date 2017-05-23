@@ -18,14 +18,30 @@ namespace RecipeManager.WebApp.Services
         private IRecipeIngredientRepository RecipeIngredientRepository { get; set; }
         private IStepRepository StepRepository { get; set; }
 
+        public RecipeService(IRecipeRepository recipeRepository, IRecipeIngredientRepository recipeIngredientRepository,
+            IStepRepository stepRepository)
+        {
+            RecipeRepository = recipeRepository;
+            RecipeIngredientRepository = recipeIngredientRepository;
+            StepRepository = stepRepository;
+        }
+
         public async Task<Recipe> GetRecipeByID(Guid id)
         {
-            throw new NotImplementedException();
+            var recipe = await RecipeRepository.Get(id);
+            recipe.Ingredients = await RecipeIngredientRepository.GetByRecipeID(recipe.Id);
+            recipe.Steps = await StepRepository.GetByRecipeID(recipe.Id);
+
+            return recipe;
         }
 
         public async Task<Recipe> GetRecipeByKey(string key)
         {
-            throw new NotImplementedException();
+            var recipe = await RecipeRepository.GetByKey(key);
+            recipe.Ingredients = await RecipeIngredientRepository.GetByRecipeID(recipe.Id);
+            recipe.Steps = await StepRepository.GetByRecipeID(recipe.Id);
+
+            return recipe;
         }
     }
 }

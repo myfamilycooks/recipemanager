@@ -15,10 +15,12 @@ namespace RecipeManager.WebApp.Controllers
     public class RecipeController : Controller
     {
         private IRecipeRepository Repository { get; set; }
+        private IRecipeService Service { get; set; }
 
-        public RecipeController(IRecipeRepository recipeDataRepository)
+        public RecipeController(IRecipeRepository recipeDataRepository, IRecipeService recipeService)
         {
             Repository = recipeDataRepository;
+            Service = recipeService;
         }
         // GET: api/Recipe
         [HttpGet]
@@ -31,7 +33,7 @@ namespace RecipeManager.WebApp.Controllers
         [HttpGet("{key}", Name = "Get")]
         public async Task<IActionResult> Get(string key)
         {
-            return Ok(await Repository.GetByKey(key));
+            return Ok(await Service.GetRecipeByKey(key));
         }
         
         // POST: api/Recipe

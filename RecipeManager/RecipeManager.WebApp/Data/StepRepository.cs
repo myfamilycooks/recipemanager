@@ -50,19 +50,20 @@ namespace RecipeManager.WebApp.Data
         public async Task<Step> Get(Guid id)
         {
             await Database.Connect();
-            return await Database.Connection.QueryFirstOrDefaultAsync<Step>("select * from recpie_steps where id = @id",
+            return await Database.Connection.QueryFirstOrDefaultAsync<Step>("select * from recipe_steps where id = @id",
                 new { id = id });
         }
 
         public async Task Delete(Step item)
         {
-            throw new NotImplementedException();
+            await Database.Connect();
+            await Database.Connection.ExecuteAsync("delete from recipe_steps where id = @id", new { id = item.Id });
         }
 
         public async Task<IEnumerable<Step>> GetByRecipeID(Guid recipeId)
         {
             await Database.Connect();
-            return await Database.Connection.QueryAsync<Step>("select * from recpie_steps where recipeid = @recipeid",
+            return await Database.Connection.QueryAsync<Step>("select * from recipe_steps where recipeid = @recipeid",
                 new {recipeid = recipeId});
         }
     }
