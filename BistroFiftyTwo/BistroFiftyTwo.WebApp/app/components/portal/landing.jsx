@@ -4,27 +4,42 @@ import * as actions from '../../actions';
 import Header from '../header';
 
 class Landing extends React.Component {
-  componentWillMount() {
-    const foo = this.props.loadProfile();
-    console.log(foo);
-  }
+    componentDidMount() {
+      this.setState({ isLoading: true });
+      this.props.loadProfile();
+      
+    }
 
-  render(){
-    const user = this.props.profileUser ? this.props.profileUser : {};
-     
-    return(
-      <div>
-        <Header />
-        <h2 className="margin-bottom-twenty">
-          Welcome to the Recipe Portal
-          {user.chef}
-        </h2>
-      </div>
-    )
+    render() {
+        if (this.props.error) {
+            console.log(this.props.error);
+            return <p>Sorry! There was an error loading the items </p>;
+        }
+        if (this.props.isLoading) {
+            return <p>Loading…</p>;
+        }
+        if(this.props.profile.user){
+             return <span>Hello {this.props.profile.user.chef}</span>
+            }
+        return (
+          <div>
+       
+            
+            </div>
+        );
+    }
+}
+const mapStateToProps = (state) => {
+  return {
+    profile: state.profile,
+    error: state.profileHasErrored,
+    isLoading: state.profileIsLoading
   }
 }
-function mapStateToProps(state) {
-  return { profileUser: state.profile };
-}
 
-export default connect(mapStateToProps, actions)(Landing);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loadProfile: () => dispatch(actions.loadProfile())
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Landing);

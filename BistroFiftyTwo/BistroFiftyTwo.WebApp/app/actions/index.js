@@ -1,7 +1,7 @@
 import axios from 'axios';
 import querystring from 'querystring';
 import { hashHistory } from 'react-router';
-import { AUTH_USER, DEAUTH_USER, LOGIN_ERROR, LOAD_PROFILE } from './types';
+import { AUTH_USER, DEAUTH_USER, LOGIN_ERROR, LOAD_PROFILE, PROFILE_HAS_ERRORED, PROFILE_IS_LOADING, PROFILE_HAS_LOADED } from './types';
 
 const ROOT_URL = ''; // we're using the same app, but that could change.
 
@@ -59,7 +59,7 @@ export function registerUser(user) {
         });
     }
 }
-
+/*
 export function loadProfile() {
     return function(dispatch) {
         const token = JSON.parse(localStorage.getItem('token'));
@@ -67,9 +67,44 @@ export function loadProfile() {
             dispatch({ type: LOAD_PROFILE, profile: response.data });
         }).catch(err => console.error(err));
     }
+}
+*/
+export function profileHasErrored(bool, err) {
+    return { 
+        type: PROFILE_HAS_ERRORED, 
+        hasErrored: bool,
+        error: err
+    };
+}
 
+export function profileIsLoading(bool) {
     return {
-        type: LOAD_PROFILE,
-        payload: request
+        type: PROFILE_IS_LOADING,
+        isLoading: bool
+    };
+}
+
+export function profileFetchedSuccessfully(profile) {
+    return {
+        type: PROFILE_HAS_LOADED,
+        profile
+    };
+}
+
+export function loadProfile() {
+    return (dispatch) => {
+        dispatch(profileIsLoading(true));
+
+        const token = JSON.parse(localStorage.getItem('token'));
+        axios.get(`${ROOT_URL}/api/profile/whoami`, { headers: { Authorization: `Bearer ${token.access_token}` } })
+             .then(response => {
+                  if(!response.status == 200) {
+                      throw Error(response.statusText);
+                  }
+                  dispatch(profileIsLoading(false));
+                  return response.data;
+             })
+             .then((profile) => dispatch(profileFetchedSuccessfully(profile)))
+             .catch(err => dispatch(profileHasErrored(true, err)));
     }
 }
