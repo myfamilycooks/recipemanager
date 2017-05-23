@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
+using Npgsql;
+using Dapper;
+using System.ComponentModel;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
@@ -92,7 +95,7 @@ namespace BistroFiftyTwo.Server.Repositories
         //    }
         //    return dictionary;
         //}
-        private static void AddPropertyToDictionary<T>(PropertyDescriptor property, object source,
+        private static void AddPropertyToDictionary<T>(System.ComponentModel.PropertyDescriptor property, object source,
             Dictionary<string, T> dictionary)
         {
             var value = property.GetValue(source);

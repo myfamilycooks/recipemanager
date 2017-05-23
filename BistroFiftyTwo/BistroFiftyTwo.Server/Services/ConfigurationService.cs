@@ -1,4 +1,6 @@
-﻿namespace BistroFiftyTwo.Server.Services
+﻿using Microsoft.Extensions.Configuration;
+
+namespace BistroFiftyTwo.Server.Services
 {
     public interface IConfigurationService
     {

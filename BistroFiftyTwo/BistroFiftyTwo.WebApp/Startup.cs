@@ -35,14 +35,6 @@ namespace BistroFiftyTwo.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            //services.AddEntityFramework()
-            //    .AddEntityFrameworkNpgsql()
-            //    .AddDbContext<DbContext>(options =>
-            //    {
-            //        options.UseNpgsql(Configuration["Data:IdentityConnection"]);
-            //        options.UseOpenIddict();
-            //    });
-            //    options.UseNpgsql(Configuration["Data:DefaultConnection"]));
             services.AddDbContext<DbContext>(options =>
             {
                 // Configure the context to use an in-memory store.

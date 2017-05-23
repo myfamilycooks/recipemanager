@@ -1,7 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="autofac" Version="4.6.0" />
+    <PackageReference Include="dapper" Version="1.50.2" /> 
+    <PackageReference Include="microsoft.aspnetcore.cryptography.keyderivation" Version="1.1.2" />
+    <PackageReference Include="microsoft.extensions.configuration" Version="1.1.2" />
+    <PackageReference Include="npgsql" Version="3.2.2" />
+  </ItemGroup>
 </Project>

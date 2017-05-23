@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
-
+using Npgsql;
+using Dapper;
 namespace BistroFiftyTwo.Server.Repositories
 {
     public interface IUserRoleRepository : IDisposable
