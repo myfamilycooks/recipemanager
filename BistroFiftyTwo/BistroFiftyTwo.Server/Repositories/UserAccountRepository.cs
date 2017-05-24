@@ -20,7 +20,7 @@ namespace BistroFiftyTwo.Server.Repositories
 
         protected NpgsqlConnection Connection { get; set; }
 
-        public async Task<UserAccount> Create(UserAccount item)
+        public async Task<UserAccount> CreateAsync(UserAccount item)
         {
             var query = @"insert into user_accounts
                 (login, email, password, createdby, modifiedby, fullname, salt, passwordformat)
@@ -43,34 +43,34 @@ namespace BistroFiftyTwo.Server.Repositories
             return await Connection.QuerySingleAsync<UserAccount>(query, values);
         }
 
-        public async Task Delete(UserAccount item)
+        public async Task DeleteAsync(UserAccount item)
         {
             await Connection.ExecuteAsync("delete from user_accounts where id = @id", new {id = item.ID});
         }
 
-        public async Task<UserAccount> Get(Guid id)
+        public async Task<UserAccount> GetAsync(Guid id)
         {
             return await Connection.QuerySingleAsync<UserAccount>("select * from user_accounts where id = @id", new {id});
         }
 
-        public async Task<IEnumerable<UserAccount>> GetAll()
+        public async Task<IEnumerable<UserAccount>> GetAllAsync()
         {
             return await Connection.QueryAsync<UserAccount>("select * from user_accounts");
         }
 
-        public async Task<UserAccount> GetByEmail(string email)
+        public async Task<UserAccount> GetByEmailAsync(string email)
         {
             return await Connection.QuerySingleAsync<UserAccount>("select * from user_accounts where id = @email",
                 new {email});
         }
 
-        public async Task<UserAccount> GetByLogin(string login)
+        public async Task<UserAccount> GetByLoginAsync(string login)
         {
             return await Connection.QuerySingleAsync<UserAccount>("select * from user_accounts where login = @login",
                 new {login});
         }
 
-        public async Task<UserAccount> Update(UserAccount item)
+        public async Task<UserAccount> UpdateAsync(UserAccount item)
         {
             var query = @"update user_accounts set 
                              login = @login,

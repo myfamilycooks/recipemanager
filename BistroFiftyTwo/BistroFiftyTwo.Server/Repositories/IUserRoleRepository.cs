@@ -9,13 +9,13 @@ namespace BistroFiftyTwo.Server.Repositories
 {
     public interface IUserRoleRepository : IDisposable
     {
-        Task<IEnumerable<UserRole>> GetByUserID(Guid userId);
-        Task<IEnumerable<UserRole>> GetByRoleID(Guid roleId);
-        Task<UserRole> Create(UserRole item);
-        Task<IEnumerable<UserRole>> GetAll();
-        Task<UserRole> Update(UserRole item);
-        Task Delete(UserRole item);
-        Task<UserRole> GetUserRole(Guid userid, Guid roleId);
+        Task<IEnumerable<UserRole>> GetByUserIDAsync(Guid userId);
+        Task<IEnumerable<UserRole>> GetByRoleIDAsync(Guid roleId);
+        Task<UserRole> CreateAsync(UserRole item);
+        Task<IEnumerable<UserRole>> GetAllAsync();
+        Task<UserRole> UpdateAsync(UserRole item);
+        Task DeleteAsync(UserRole item);
+        Task<UserRole> GetUserRoleAsync(Guid userid, Guid roleId);
     }
 
     public class UserRoleRepository : IUserRoleRepository
@@ -35,7 +35,7 @@ namespace BistroFiftyTwo.Server.Repositories
             Connection.Dispose();
         }
 
-        public async Task<IEnumerable<UserRole>> GetByUserID(Guid userId)
+        public async Task<IEnumerable<UserRole>> GetByUserIDAsync(Guid userId)
         {
             var query = "select * from user_roles where userid = @userId";
             var param = new {userId};
@@ -43,7 +43,7 @@ namespace BistroFiftyTwo.Server.Repositories
             return await Connection.QueryAsync<UserRole>(query, param);
         }
 
-        public async Task<IEnumerable<UserRole>> GetByRoleID(Guid roleId)
+        public async Task<IEnumerable<UserRole>> GetByRoleIDAsync(Guid roleId)
         {
             var query = "select * from user_roles where roleid = @roleId";
             var param = new {roleId};
@@ -51,7 +51,7 @@ namespace BistroFiftyTwo.Server.Repositories
             return await Connection.QueryAsync<UserRole>(query, param);
         }
 
-        public async Task<UserRole> Create(UserRole item)
+        public async Task<UserRole> CreateAsync(UserRole item)
         {
             var query =
                 "insert into user_roles (userid, roleid, createdby, modifiedby) values (@userid, @roleid, @createdby, @modifiedby) returning *";
@@ -67,14 +67,14 @@ namespace BistroFiftyTwo.Server.Repositories
             return await Connection.QuerySingleAsync<UserRole>(query, param);
         }
 
-        public async Task<IEnumerable<UserRole>> GetAll()
+        public async Task<IEnumerable<UserRole>> GetAllAsync()
         {
             var query = "select * from user_roles";
 
             return await Connection.QueryAsync<UserRole>(query);
         }
 
-        public async Task<UserRole> Update(UserRole item)
+        public async Task<UserRole> UpdateAsync(UserRole item)
         {
             var query =
                 "update user_roles set isdisabled=@isdisabled, modifieddate=@modifieddate, modifiedby = @modifiedby, effectiveenddate=@effectiveenddate where userid = @userid and roleid = @roleid";
@@ -92,7 +92,7 @@ namespace BistroFiftyTwo.Server.Repositories
             return await Connection.QuerySingleAsync<UserRole>(query, param);
         }
 
-        public async Task Delete(UserRole item)
+        public async Task DeleteAsync(UserRole item)
         {
             var query = "delete from user_roles where userid = @userId and roleid=@roleId";
             var param = new {roleId = item.RoleID, userId = item.UserID};
@@ -100,7 +100,7 @@ namespace BistroFiftyTwo.Server.Repositories
             await Connection.ExecuteAsync(query, param);
         }
 
-        public async Task<UserRole> GetUserRole(Guid userid, Guid roleId)
+        public async Task<UserRole> GetUserRoleAsync(Guid userid, Guid roleId)
         {
             var query = "select * from user_roles where userid = @userId and roleid = @roleid";
             var param = new {userId = userid, roleid = roleId};
