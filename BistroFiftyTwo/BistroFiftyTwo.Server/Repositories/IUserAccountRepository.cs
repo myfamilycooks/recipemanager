@@ -6,7 +6,7 @@ namespace BistroFiftyTwo.Server.Repositories
 {
     public interface IUserAccountRepository : IDataRepository<UserAccount>, IDisposable
     {
-        Task<UserAccount> GetByLogin(string login);
-        Task<UserAccount> GetByEmail(string email);
+        Task<UserAccount> GetByLoginAsync(string login);
+        Task<UserAccount> GetByEmailAsync(string email);
     }
 }

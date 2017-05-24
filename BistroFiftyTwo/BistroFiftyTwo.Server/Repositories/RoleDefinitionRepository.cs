@@ -18,7 +18,7 @@ namespace BistroFiftyTwo.Server.Repositories
 
         protected NpgsqlConnection Connection { get; set; }
 
-        public async Task<RoleDefinition> Create(RoleDefinition item)
+        public async Task<RoleDefinition> CreateAsync(RoleDefinition item)
         {
             var query = @"insert into role_definitions (name, fullname, description, createdby, modifiedby)
                            values (@name, @fullname, @description, @createdby, @modifiedby)
@@ -35,7 +35,7 @@ namespace BistroFiftyTwo.Server.Repositories
             return await Connection.QuerySingleAsync<RoleDefinition>(query, row);
         }
 
-        public async Task Delete(RoleDefinition item)
+        public async Task DeleteAsync(RoleDefinition item)
         {
             await Connection.ExecuteAsync("delete from role_definitions where id = @id", new {id = item.ID});
         }
@@ -46,19 +46,19 @@ namespace BistroFiftyTwo.Server.Repositories
             Connection.Dispose();
         }
 
-        public async Task<RoleDefinition> Get(Guid id)
+        public async Task<RoleDefinition> GetAsync(Guid id)
         {
             return
                 await Connection.QuerySingleOrDefaultAsync<RoleDefinition>(
                     "select * from role_definitions where id = @id", new {id});
         }
 
-        public async Task<IEnumerable<RoleDefinition>> GetAll()
+        public async Task<IEnumerable<RoleDefinition>> GetAllAsync()
         {
             return await Connection.QueryAsync<RoleDefinition>("select * from role_definitions");
         }
 
-        public async Task<RoleDefinition> Update(RoleDefinition item)
+        public async Task<RoleDefinition> UpdateAsync(RoleDefinition item)
         {
             var query = @"
                          update role_definitions

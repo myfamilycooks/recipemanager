@@ -6,10 +6,10 @@ namespace BistroFiftyTwo.Server.Repositories
 {
     public interface IDataRepository<T>
     {
-        Task<T> Get(Guid id);
-        Task<T> Create(T item);
-        Task<IEnumerable<T>> GetAll();
-        Task<T> Update(T item);
-        Task Delete(T item);
+        Task<T> GetAsync(Guid id);
+        Task<T> CreateAsync(T item);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> UpdateAsync(T item);
+        Task DeleteAsync(T item);
     }
 }

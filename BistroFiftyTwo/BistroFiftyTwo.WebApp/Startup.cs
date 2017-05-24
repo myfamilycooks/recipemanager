@@ -14,6 +14,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using BistroFiftyTwo.Server;
 
 namespace BistroFiftyTwo.WebApp
 {
@@ -28,13 +31,15 @@ namespace BistroFiftyTwo.WebApp
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
+        public IContainer ApplicationContainer { get; private set; }
 
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
             services.AddDbContext<DbContext>(options =>
             {
                 // Configure the context to use an in-memory store.
@@ -63,6 +68,15 @@ namespace BistroFiftyTwo.WebApp
                 // During development, you can disable the HTTPS requirement.
                 options.DisableHttpsRequirement();
             });
+
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+            builder.Register(c => Configuration).As<IConfigurationRoot>();
+
+            builder.RegisterModule<BistroFiftyTwoServerModule>();
+            ApplicationContainer = builder.Build();
+
+            return new AutofacServiceProvider(ApplicationContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

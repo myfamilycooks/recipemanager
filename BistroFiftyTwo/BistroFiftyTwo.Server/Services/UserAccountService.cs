@@ -33,32 +33,32 @@ namespace BistroFiftyTwo.Server.Services
             item.ModifiedBy = "chef";
             item.ModifiedDate = DateTime.UtcNow;
 
-            return await Repository.Create(item);
+            return await Repository.CreateAsync(item);
         }
 
         public async Task Delete(UserAccount item)
         {
-            await Repository.Delete(item);
+            await Repository.DeleteAsync(item);
         }
 
         public async Task<UserAccount> Get(Guid id)
         {
-            return await Repository.Get(id);
+            return await Repository.GetAsync(id);
         }
 
         public async Task<IEnumerable<UserAccount>> GetAll()
         {
-            return await Repository.GetAll();
+            return await Repository.GetAllAsync();
         }
 
         public async Task<UserAccount> GetByEmail(string email)
         {
-            return await Repository.GetByEmail(email);
+            return await Repository.GetByEmailAsync(email);
         }
 
         public async Task<UserAccount> GetByLogin(string login)
         {
-            return await Repository.GetByLogin(login);
+            return await Repository.GetByLoginAsync(login);
         }
 
         public async Task<UserAccount> Update(UserAccount item)
@@ -67,7 +67,7 @@ namespace BistroFiftyTwo.Server.Services
             item.Password = originalAccount.Password;
             item.PasswordFormat = (int) PasswordFormat.Hashed;
 
-            return await Repository.Update(item);
+            return await Repository.UpdateAsync(item);
         }
 
         public async Task<UserAccount> Secure(UserAccount item, string newPassword)
@@ -84,12 +84,12 @@ namespace BistroFiftyTwo.Server.Services
             item.Salt = salt;
             item.PasswordFormat = (int) PasswordFormat.Hashed;
 
-            return await Repository.Update(item);
+            return await Repository.UpdateAsync(item);
         }
 
         public async Task<UserAccount> Login(string login, string password)
         {
-            var userAccount = await Repository.GetByLogin(login);
+            var userAccount = await Repository.GetByLoginAsync(login);
 
             if (userAccount.PasswordFormat != (int) PasswordFormat.Hashed)
                 if (userAccount.Password.Equals(password))
