@@ -25,6 +25,7 @@
 <PackageReference Include="OpenIddict" Version="1.0.0-*" />
 <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="1.0.0-*" />
 <PackageReference Include="OpenIddict.Mvc" Version="1.0.0-*" />
+<PackageReference Include="Redis-64" Version="3.0.503" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
