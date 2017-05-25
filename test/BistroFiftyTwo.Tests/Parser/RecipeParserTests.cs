@@ -68,5 +68,99 @@ Bunnies
             Assert.NotEmpty(output.Errors); 
             Assert.Matches(parseError.ToString(), output.Errors.Single(c => c.ErrorCode == ParseErrorCode.NoIngredients).ToString());
         }
+
+        [Fact, Trait("Parser Tests", "When Parsing a recipe with proper sections")]
+        public void Parser_Received_Recipe_With_Proper_Sections()
+        {
+            // Arrange
+            var inputString = @"
+description
+
+my description
+
+ingredients
+
+my ingredients
+
+instructions
+
+my instructions
+
+";
+            var recipeParserConfiguration = new ParserConfiguration() { ReportExceptions = true };
+            var recipeParser = new RecipeParser(recipeParserConfiguration);
+           
+            // Act 
+            var output = recipeParser.Parse(inputString);
+
+            // Assert 
+            Assert.NotNull(output);
+            Assert.Equal(ParseStatus.Succeeded, output.Status);
+            Assert.Empty(output.Errors); 
+        }
+
+        [Fact, Trait("Parser Tests", "When Parsing a recipe with no instructions")]
+        public void Parser_Received_Recipe_With_No_Instructions()
+        {
+            // Arrange
+            var inputString = @"
+Puppies
+Kittens
+Bunnies
+
+";
+            var recipeParserConfiguration = new ParserConfiguration() { ReportExceptions = true };
+            var recipeParser = new RecipeParser(recipeParserConfiguration);
+            var parseError = new ParseError()
+            {
+                Character = -1,
+                Line = -1,
+                Description = "Could Not find any instructions",
+                ErrorCode = ParseErrorCode.NoInstructions,
+                ErrorType = ErrorType.MissingSection,
+                UnparsedLine = ""
+            };
+
+            // Act 
+            var output = recipeParser.Parse(inputString);
+
+            // Assert 
+            Assert.NotNull(output);
+            Assert.Equal(ParseStatus.ParsedWithErrors, output.Status);
+            Assert.NotEmpty(output.Errors);
+            Assert.Matches(parseError.ToString(), output.Errors.Single(c => c.ErrorCode == ParseErrorCode.NoInstructions).ToString());
+        }
+
+        [Fact, Trait("Parser Tests", "When Parsing a recipe with no description")]
+        public void Parser_Received_Recipe_With_No_Description()
+        {
+            // Arrange
+            var inputString = @"
+Puppies
+Kittens
+Bunnies
+
+";
+            var recipeParserConfiguration = new ParserConfiguration() { ReportExceptions = true };
+            var recipeParser = new RecipeParser(recipeParserConfiguration);
+            var parseError = new ParseError()
+            {
+                Character = -1,
+                Line = -1,
+                Description = "Could Not find any description",
+                ErrorCode = ParseErrorCode.NoDescription,
+                ErrorType = ErrorType.MissingSection,
+                UnparsedLine = ""
+            };
+
+            // Act 
+            var output = recipeParser.Parse(inputString);
+
+            // Assert 
+            Assert.NotNull(output);
+            Assert.Equal(ParseStatus.ParsedWithErrors, output.Status);
+            Assert.NotEmpty(output.Errors);
+            Assert.Matches(parseError.ToString(), output.Errors.Single(c => c.ErrorCode == ParseErrorCode.NoDescription).ToString());
+        }
     }
 }

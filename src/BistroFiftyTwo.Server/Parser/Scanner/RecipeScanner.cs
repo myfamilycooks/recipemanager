@@ -48,27 +48,30 @@ namespace BistroFiftyTwo.Server.Parser.Scanner
             {
                 switch (s.Trim().ToLower()) {
                     case "description":
-                        CloseSection(scanned, "description", currentSection);
+                        CloseSection(scanned, "description", ref currentSection);
                         break;
                     case "instructions":
-                        CloseSection(scanned, "instructions", currentSection);
+                        CloseSection(scanned, "instructions",ref currentSection);
                         break;
                     case "ingredients":
-                        CloseSection(scanned, "ingredients", currentSection);
+                        CloseSection(scanned, "ingredients",ref currentSection);
                         break;
                     default:
-                        currentSection.Content.Add(s);
+                        if(!String.IsNullOrEmpty(s))
+                        {
+                            currentSection.Content.Add(s);
+                        }
                         break;
                 }
             });
 
             // close the last section...
-            CloseSection(scanned, "", currentSection);
+            CloseSection(scanned, "",ref currentSection);
 
             return scanned;
         }
 
-        private void CloseSection(ScannedRecipe scanned, string newSectionName, RecipeSection currentSection)
+        private void CloseSection(ScannedRecipe scanned, string newSectionName, ref RecipeSection currentSection)
         {
             switch (currentSection.SectionName)
             {
