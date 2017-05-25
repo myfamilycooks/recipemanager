@@ -9,9 +9,12 @@ namespace BistroFiftyTwo.Server.Parser
     public class RecipeParser : IRecipeParser
     {
         protected ParserConfiguration Configuration { get; set; }
+        protected IngredientParser IngredientParser { get; set; }
+
         public RecipeParser(ParserConfiguration config)
         {
             Configuration = config;
+            IngredientParser = new IngredientParser(Configuration);
         }
         public ParserResult Parse(string input)
         {
@@ -51,7 +54,15 @@ namespace BistroFiftyTwo.Server.Parser
 
         private void ParseIngredients(ScannedRecipe scannedRecipe, ParserResult result)
         {
+            scannedRecipe.IngredientSection.Content.ForEach(c =>
+            {
+                if (!String.IsNullOrEmpty(c))
+                {
+                    var ingredient = IngredientParser.Parse(c);
 
+                    result.Output.Ingredients.Append(ingredient);
+                }
+            });
         }
 
         private bool ValidateScannedRecipe(ScannedRecipe scannedRecipe, ParserResult result)

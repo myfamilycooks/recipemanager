@@ -7,6 +7,12 @@ namespace BistroFiftyTwo.Server.Entities
 {
     public class Recipe : IBistroEntity
     {
+        public Recipe()
+        {
+            Ingredients = new List<RecipeIngredient>();
+            Steps = new List<Step>();
+        }
+
         public Guid ID { get; set; }
         public string Title { get; set; }
         public string Key { get; set; }

@@ -8,6 +8,7 @@ namespace BistroFiftyTwo.Server.Parser
         public ParserResult()
         {
             Errors = new List<ParseError>();
+            Output = new Recipe();
         }
         public List<ParseError> Errors { get; set; }
         public ParseStatus Status { get; set; }
