@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Xunit;
+using BistroFiftyTwo.Server.Entities;
 
 namespace BistroFiftyTwo.Tests.Parser
 {
@@ -161,6 +162,62 @@ Bunnies
             Assert.Equal(ParseStatus.ParsedWithErrors, output.Status);
             Assert.NotEmpty(output.Errors);
             Assert.Matches(parseError.ToString(), output.Errors.Single(c => c.ErrorCode == ParseErrorCode.NoDescription).ToString());
+        }
+
+        [Fact, Trait("Parser Tests", "When Parsing a full recipe")]
+        public void Parser_Received_Full_Recipe()
+        {
+            // Arrange
+            var inputString = @"
+description
+
+a great recipe for chicken wings
+
+ingredients
+
+1 cup franks red hot
+1 cup butter
+1 cup bbq sauce
+1 cup v8
+1 lb chicken wings
+
+instructions
+
+1) mix redhot, butter, bbq sauce, and v8 together stirring frequently
+2) bake, grill or deep fry chicken wings
+3) coat chicken wings in sauce 
+4) put wings on grill for a minute or two (optional)
+
+";
+            var recipeParserConfiguration = new ParserConfiguration() { ReportExceptions = true };
+            var recipeParser = new RecipeParser(recipeParserConfiguration);
+            var recipe = new Recipe()
+            {
+                Description = "a great recipe for chicken wings",
+                Steps = new List<Step>()
+                {
+                    new Step() { Ordinal = 1, Instructions = "mix redhot, butter, bbq sauce, and v8 together stirring frequently"},
+                    new Step() { Ordinal = 2, Instructions = "bake, grill or deep fry chicken wings"},
+                    new Step() { Ordinal = 3, Instructions = "coat chicken wings in sauce"},
+                    new Step() { Ordinal = 4, Instructions = "put wings on grill for a minute or two (optional)"},
+                }
+            };
+
+            // Act 
+            var output = recipeParser.Parse(inputString);
+
+            // Assert 
+            Assert.NotNull(output);
+            Assert.Equal(ParseStatus.Succeeded, output.Status);
+            Assert.Empty(output.Errors);
+            Assert.NotEmpty(output.Output.Ingredients);
+            Assert.NotEmpty(output.Output.Steps);
+            Assert.Matches(recipe.Description, output.Output.Description);
+            Assert.Equal(recipe.Steps.Single(s => s.Ordinal == 1).Instructions, output.Output.Steps.Single(s => s.Ordinal == 1).Instructions);
+            Assert.Equal(recipe.Steps.Single(s => s.Ordinal == 2).Instructions, output.Output.Steps.Single(s => s.Ordinal == 2).Instructions);
+            Assert.Equal(recipe.Steps.Single(s => s.Ordinal == 3).Instructions, output.Output.Steps.Single(s => s.Ordinal == 3).Instructions);
+            Assert.Equal(recipe.Steps.Single(s => s.Ordinal == 4).Instructions, output.Output.Steps.Single(s => s.Ordinal == 4).Instructions);
+
         }
     }
 }

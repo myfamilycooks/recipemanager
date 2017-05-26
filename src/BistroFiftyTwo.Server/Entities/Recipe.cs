@@ -23,8 +23,8 @@ namespace BistroFiftyTwo.Server.Entities
         public string CreatedBy {get;set;}
         public DateTime ModifiedDate {get;set;}
         public string ModifiedBy {get;set;}
-        public IEnumerable<RecipeIngredient> Ingredients { get; internal set; }
-        public IEnumerable<Step> Steps { get; internal set; }
+        public IEnumerable<RecipeIngredient> Ingredients { get; set; }
+        public IEnumerable<Step> Steps { get; set; }
 
         public List<string> Columns()
         {

@@ -1,8 +1,10 @@
-﻿using BistroFiftyTwo.Server.Parser.Scanner;
+﻿using BistroFiftyTwo.Server.Entities;
+using BistroFiftyTwo.Server.Parser.Scanner;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
- 
+using System.Text.RegularExpressions;
 
 namespace BistroFiftyTwo.Server.Parser
 {
@@ -46,23 +48,68 @@ namespace BistroFiftyTwo.Server.Parser
                 }
                 else
                 {
+                    ParseDescription(scannedRecipe, result);
                     ParseIngredients(scannedRecipe, result);
+                    ParseInstructions(scannedRecipe, result);
                 }
             }
             return result;
         }
 
+        private void ParseDescription(ScannedRecipe scannedRecipe, ParserResult result)
+        {
+            var description = new StringBuilder();
+
+            scannedRecipe.DescriptionSection.Content.ForEach(c =>
+            {
+                if(!String.IsNullOrEmpty(c))
+                {
+                    description.AppendLine(c); // we're appending line because that's how we found it.
+                }
+            });
+
+            result.Output.Description = description.ToString();
+        }
+
+        private void ParseInstructions(ScannedRecipe scannedRecipe, ParserResult result)
+        {
+            var instructionList = new List<Step>();
+            var instructionOrdinal = 1;
+
+            scannedRecipe.InstructionSection.Content.ForEach(c =>
+            {
+                if (!String.IsNullOrEmpty(c))
+                {
+                    // get rid of Numbers if they exist at start of line.
+                    var correctedStep = Regex.Replace(c.Trim(), @"^\d+(\)|\.)", String.Empty);
+
+                    instructionList.Add(new Step()
+                    {
+                        Ordinal = instructionOrdinal++,
+                        Instructions = correctedStep.Trim(),
+                    });
+                }
+            });
+
+            result.Output.Steps = instructionList;
+        }
+
         private void ParseIngredients(ScannedRecipe scannedRecipe, ParserResult result)
         {
+            var ingredients = new List<RecipeIngredient>();
+            var ingredientOrdinal = 1;
+
             scannedRecipe.IngredientSection.Content.ForEach(c =>
             {
                 if (!String.IsNullOrEmpty(c))
                 {
                     var ingredient = IngredientParser.Parse(c);
-
-                    result.Output.Ingredients.Append(ingredient);
+                    ingredient.Ordinal = ingredientOrdinal++;
+                    ingredients.Add(ingredient);
                 }
             });
+
+            result.Output.Ingredients = ingredients;
         }
 
         private bool ValidateScannedRecipe(ScannedRecipe scannedRecipe, ParserResult result)

@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 
 namespace BistroFiftyTwo.Server.Services
 {
-    public interface IRecipeService
-    {
-        Task<Recipe> GetByIdAsync(Guid id);
-        Task<Recipe> GetByKeyAsync(string key);
-    }
     public class RecipeService : IRecipeService
     {
         private IRecipeRepository RecipeRepository { get; set; }

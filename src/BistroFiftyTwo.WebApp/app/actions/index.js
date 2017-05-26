@@ -25,7 +25,6 @@ export function loginUser({ userid, password }) {
                 }
             })
             .then(response => {
-                console.log(response);
                 // if request is good,
                 // - update state to indicate user is authenticated
                 dispatch({ type: AUTH_USER })
