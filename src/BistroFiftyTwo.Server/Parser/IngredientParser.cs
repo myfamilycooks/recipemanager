@@ -1,6 +1,5 @@
 ﻿using BistroFiftyTwo.Server.Entities;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -135,48 +134,6 @@ namespace BistroFiftyTwo.Server.Parser
             var denominator = Double.Parse(splitFraction.Last());
             var fractionalValue = numerator / denominator;
             return fractionalValue;
-        }
-    }
-
-    public class Token
-    {
-        public string Value { get; set; }
-        public Token Next { get; set; }
-        public Token Previous { get; set; }
-    }
-
-    public class Lexer
-    {
-        public static Token Tokenize(string input)
-        {
-            var parts = Regex.Split(input, @"\s+");
-            var tokens = new List<string>();
-            var token = new Token();
-
-            if(parts != null && parts.Any())
-            {
-                tokens = parts.ToList();
-            }
-
-            tokens.ForEach(t =>
-            {
-                if (!String.IsNullOrEmpty(t))
-                {
-                    var newToken = new Token()
-                    {
-                        Previous = token
-                    };
-
-                    token.Value = t;
-                    token.Next = newToken;
-                    token = token.Next;
-                }
-            });
-
-            while (token.Previous != null)
-                token = token.Previous;
-
-            return token;
         }
     }
 }

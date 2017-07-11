@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using BistroFiftyTwo.Server.Parser;
 
 namespace BistroFiftyTwo.Server.Services
 {
@@ -12,12 +13,14 @@ namespace BistroFiftyTwo.Server.Services
         private IRecipeRepository RecipeRepository { get; set; }
         private IRecipeIngredientRepository RecipeIngredientRepository { get; set; }
         private IStepRepository StepRepository { get; set; }
+        private IRecipeParser RecipeParser { get; set; }
 
         public RecipeService(IRecipeRepository recipeRepository, IRecipeIngredientRepository recipeIngredientRepository, IStepRepository stepRepository)
         {
             RecipeRepository = recipeRepository;
             RecipeIngredientRepository = recipeIngredientRepository;
             StepRepository = stepRepository;
+            RecipeParser = new RecipeParser(new ParserConfiguration());
         }
 
         public async Task<Recipe> GetByIdAsync(Guid id)
@@ -50,6 +53,15 @@ namespace BistroFiftyTwo.Server.Services
             await Task.WhenAll(ingredientTask, stepTask);
 
             return recipe;
+        }
+
+        public async Task<Recipe> Parse(string input)
+        {
+            return await Task.Run(() =>
+            {
+                var parseOutput = RecipeParser.Parse(input);
+                return parseOutput.Output;
+            });
         }
     }
 }

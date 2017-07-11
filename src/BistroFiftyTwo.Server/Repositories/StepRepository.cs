@@ -9,10 +9,6 @@ using BistroFiftyTwo.Server.Services;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
-    public interface IStepRepository : IDataRepository<Step>
-    {
-        Task<IEnumerable<Step>> GetByRecipeIdAsync(Guid recipeId);
-    }
     public class StepRepository : AutomaticDataRepository<Step>, IStepRepository
     {
         public StepRepository(IConfigurationService configurationService) : base(configurationService)

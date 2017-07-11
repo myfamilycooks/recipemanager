@@ -8,5 +8,6 @@ namespace BistroFiftyTwo.Server.Services
     {
         Task<Recipe> GetByIdAsync(Guid id);
         Task<Recipe> GetByKeyAsync(string key);
+        Task<Recipe> Parse(string input);
     }
 }

@@ -1,32 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
 namespace BistroFiftyTwo.Server.Parser.Scanner
 {
-    public class ScannedRecipe
-    {
-        public ScannedRecipe()
-        {
-            DescriptionSection = new RecipeSection();
-            IngredientSection = new RecipeSection();
-            InstructionSection = new RecipeSection();
-        }
-
-        public RecipeSection DescriptionSection { get; set; }
-        public RecipeSection IngredientSection { get; set; }
-        public RecipeSection InstructionSection { get; set; }
-    }
-    public class RecipeSection
-    {
-        public RecipeSection()
-        {
-            Content = new List<string>();
-        }
-        public string SectionName { get; set; }
-        public List<string> Content { get; set; }
-    }
     public class RecipeScanner
     {
         protected ParserConfiguration Configuration { get; set; }
