@@ -42,6 +42,8 @@ namespace BistroFiftyTwo.Server.Parser
                 var scanner = new RecipeScanner(Configuration);
                 var scannedRecipe = scanner.Scan(input);
 
+                result.Output.Title = scannedRecipe.Title;
+
                 if(!ValidateScannedRecipe(scannedRecipe, result))
                 {
                     result.Status = ParseStatus.ParsedWithErrors;
@@ -101,9 +103,10 @@ namespace BistroFiftyTwo.Server.Parser
 
             scannedRecipe.IngredientSection.Content.ForEach(c =>
             {
-                if (!String.IsNullOrEmpty(c))
+                var correctedIngredient = Regex.Replace(c.Trim(), @"^\d+(\)|\.)", String.Empty);
+                if (!String.IsNullOrEmpty(correctedIngredient.Trim()))
                 {
-                    var ingredient = IngredientParser.Parse(c);
+                    var ingredient = IngredientParser.Parse(correctedIngredient);
                     ingredient.Ordinal = ingredientOrdinal++;
                     ingredients.Add(ingredient);
                 }

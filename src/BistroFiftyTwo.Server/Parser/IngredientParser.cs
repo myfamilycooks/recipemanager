@@ -84,9 +84,10 @@ namespace BistroFiftyTwo.Server.Parser
 
         private RecipeIngredient ParseUnits(RecipeIngredient recipeIngredient, ref Token ingredientTokens)
         {
+            var lowerToken = ingredientTokens.Value.ToLower();
             foreach(var unit in Configuration.MeasurementUnits)
             {
-                if (unit.Value.Contains(ingredientTokens.Value))
+                if (unit.Value.Contains(lowerToken))
                 {
                     recipeIngredient.Units = ingredientTokens.Value;
                     ingredientTokens = ingredientTokens.Next;

@@ -19,6 +19,13 @@ namespace BistroFiftyTwo.Server.Parser.Scanner
 
             var lines = recipe.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).ToList();
 
+            if (lines.First() != "description" &&
+                lines.First() != "instructions" &&
+                lines.First() != "ingredients" &&
+                !String.IsNullOrEmpty(lines.First().Trim()))
+            {
+                scanned.Title = lines.First();
+            }
             var currentSection = new RecipeSection();
 
             lines.ForEach(s =>

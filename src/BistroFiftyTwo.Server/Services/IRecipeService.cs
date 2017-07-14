@@ -1,6 +1,7 @@
 ﻿using BistroFiftyTwo.Server.Entities;
 using System;
 using System.Threading.Tasks;
+using BistroFiftyTwo.Server.Parser;
 
 namespace BistroFiftyTwo.Server.Services
 {
@@ -8,6 +9,8 @@ namespace BistroFiftyTwo.Server.Services
     {
         Task<Recipe> GetByIdAsync(Guid id);
         Task<Recipe> GetByKeyAsync(string key);
-        Task<Recipe> Parse(string input);
+        Task<Recipe> ParseAsync(string input);
+        Recipe Parse(string input);
+        ParserResult ParseFull(string input);
     }
 }

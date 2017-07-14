@@ -54,14 +54,27 @@ namespace BistroFiftyTwo.Server.Services
 
             return recipe;
         }
-
-        public async Task<Recipe> Parse(string input)
+        
+        public async Task<Recipe> ParseAsync(string input)
         {
             return await Task.Run(() =>
             {
                 var parseOutput = RecipeParser.Parse(input);
                 return parseOutput.Output;
             });
+        }
+
+
+        public Recipe Parse(string input)
+        {
+            var parseOutput = RecipeParser.Parse(input);
+            return parseOutput.Output;
+           
+        }
+
+        public ParserResult ParseFull(string input)
+        {
+            return RecipeParser.Parse(input); 
         }
     }
 }
