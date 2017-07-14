@@ -42,7 +42,12 @@ namespace BistroFiftyTwo.Server.Parser
                 var scanner = new RecipeScanner(Configuration);
                 var scannedRecipe = scanner.Scan(input);
 
-                result.Output.Title = scannedRecipe.Title;
+                result.Output.Title = scannedRecipe.Title.Trim();
+                var key = Regex.Replace(result.Output.Title, @"[^\w\s]", "");
+                key = Regex.Replace(key, @"\s", "-");
+                key = key.ToLower();
+                result.Output.Key = key;
+                result.Output.Tags = "";
 
                 if(!ValidateScannedRecipe(scannedRecipe, result))
                 {

@@ -2,6 +2,8 @@
 using BistroFiftyTwo.Server.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Parser;
@@ -42,6 +44,34 @@ namespace BistroFiftyTwo.Server.Services
         private async Task PopulateIngredients(Recipe recipe)
         {
             recipe.Ingredients = await RecipeIngredientRepository.GetByRecipeIdAsync(recipe.ID);
+        }
+
+        public async Task<Recipe> CreateAsync(Recipe recipe)
+        {
+            var createdRecipe = await RecipeRepository.CreateAsync(recipe);
+            var recipeIngredientTasks = new List<Task<RecipeIngredient>>();
+            var recipeStepTasks = new List<Task<Step>>();
+
+            recipe.Ingredients.ToList().ForEach(r =>
+            {
+                r.RecipeId = createdRecipe.ID;
+                var task = RecipeIngredientRepository.CreateAsync(r);
+
+                recipeIngredientTasks.Add(task);
+            });
+
+            recipe.Steps.ToList().ForEach(s =>
+            {
+                s.RecipeId = createdRecipe.ID;
+                var task = StepRepository.CreateAsync(s);
+
+                recipeStepTasks.Add(task);
+            });
+
+            await Task.WhenAll(recipeIngredientTasks);
+            await Task.WhenAll(recipeStepTasks);
+
+            return await GetByIdAsync(createdRecipe.ID);
         }
 
         public async Task<Recipe> GetByKeyAsync(string key)
