@@ -8,60 +8,66 @@ declare
 	_major integer := 1;
 	_minor integer := 0;
 	_revision integer := 0;
-	_schemaname varchar := 'identity';
+	_schemaname varchar := 'recipemanager';
 
 	_patch_exists integer := 0;
 	_patch_required integer := 0;
 begin
 	select count(*) into _patch_exists
-	from schemaversion 
+	from schemaversion
 	where major = _major and minor = _minor and revision = _revision and schemaname = _schemaname;
 
 	select count(*) into _patch_required
-	from schemaversion 
+	from schemaversion
 	where major = _old_major and minor = _old_minor and revision = _old_revision and schemaname = _schemaname and current_version = true;
 
 	if(_patch_exists > 0) then
 		return;
 	end if;
-	
+
 	if (_patch_required > 0) then
 
-		create table user_accounts (
+		create table recipes (
 			id uuid not null default(uuid_generate_v4()),
-			login varchar(64) not null,
-			email varchar(64) not null,
-			password varchar(256) not null,
-			islocked boolean not null default(false),
-			isdisabled boolean not null default(false),
-			createddate timestamptz not null default(now()),
-			createdby varchar(64) not null,
-			modifieddate timestamptz default(now()),
-			modifiedby varchar(64) not null,
-			constraint pk_user_accounts_id primary key (id)
-		);
-
-		create table organizations (
-			id uuid not null default(uuid_generate_v4()),
-			name varchar(64) not null,
-			accesskey varchar(64) not null,
+			title text not null,
+			key varchar(64),
+			tags text not null,
 			description text not null,
-			owner uuid not null,
+			notes text not null,
 			createddate timestamptz not null default(now()),
 			createdby varchar(64) not null,
 			modifieddate timestamptz default(now()),
 			modifiedby varchar(64) not null,
-			constraint pk_organizations_id primary key (id),
-			constraint fk_organizations_user foreign key (owner) references user_accounts (id)
+			constraint pk_recipes_id primary key (id)
 		);
 
-		create table event_log (
+		create table recipe_steps (
 			id uuid not null default(uuid_generate_v4()),
-			eventdate timestamptz not null default(now()),
-			category int not null,
-			target uuid null,
-			eventdata int not null,
-			constraint pk_eventlog_id primary key (id)
+			ordinal int not null,
+			recipeid uuid not null,
+			step text not null,
+			createddate timestamptz not null default(now()),
+			createdby varchar(64) not null,
+			modifieddate timestamptz default(now()),
+			modifiedby varchar(64) not null,
+			constraint pk_steps_id primary key (id),
+			constraint fk_steps_recipes foreign key (recipeid) references recipes (id)
+		);
+
+		create table recipe_ingredients (
+			id uuid not null default(uuid_generate_v4()),
+			ordinal int not null,
+			recipeid uuid not null,
+			quantity decimal(6,2) not null,
+			units varchar(16) not null,
+			ingredient varchar(64) not null,
+			notes text not null,
+			createddate timestamptz not null default(now()),
+			createdby varchar(64) not null,
+			modifieddate timestamptz default(now()),
+			modifiedby varchar(64) not null,
+			constraint pk_recioe_ingredients_id primary key (id),
+			constraint fk_recioe_ingredients_recipes foreign key (recipeid) references recipes (id)
 		);
 
 		update schemaversion set current_version = false where major = _old_major and minor = _old_minor and revision = _old_revision and schemaname = _schemaname;
@@ -72,8 +78,8 @@ begin
 		(_major,_minor,_revision,_schemaname,current_timestamp, true);
 	else
 		raise exception 'Missing prerequisite schema update %.%.% for %', _major,_minor,_revision,_schemaname;
-	end if;	
-exception 
+	end if;
+exception
 	when others then
 	raise exception 'caught exception - (%) - when applying update %.%.% to % ', SQLERRM, _major,_minor,_revision,_schemaname;
 

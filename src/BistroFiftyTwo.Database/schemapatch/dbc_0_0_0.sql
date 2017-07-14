@@ -20,7 +20,7 @@ BEGIN
 		insert into schemaversion
 		(major,minor,revision,schemaname, installed_date, current_version)
 		values
-		(0,0,0,'identity',current_timestamp, true);
+		(0,0,0,'recipemanager',current_timestamp, true);
 	end if;
 
 
