@@ -12,7 +12,7 @@ namespace BistroFiftyTwo.WebApp.Controllers
 
     [Produces("application/json")]
     [Route("api/Recipe")]
-
+    [CustomExceptionFilter]
     public class RecipeController : Controller
     {
         private IRecipeService RecipeService { get; set; }
@@ -44,6 +44,21 @@ namespace BistroFiftyTwo.WebApp.Controllers
             {
                 return StatusCode(500);
             }
+        }
+
+        [Authorize, HttpPost]
+        public async Task<IActionResult> CreateRecipe(Recipe recipe)
+        {
+            try
+            {
+                var createdRecipe = await RecipeService.CreateAsync(recipe);
+                return Ok(createdRecipe);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+       
         }
 
     }

@@ -71,6 +71,7 @@ namespace BistroFiftyTwo.Server.Services
             await Task.WhenAll(recipeIngredientTasks);
             await Task.WhenAll(recipeStepTasks);
 
+            // pull the recipe from the db which also will populate the cache.
             return await GetByIdAsync(createdRecipe.ID);
         }
 
