@@ -49,15 +49,15 @@ namespace BistroFiftyTwo.WebApp.Controllers
         [Authorize, HttpPost]
         public async Task<IActionResult> CreateRecipe(Recipe recipe)
         {
-            try
-            {
+            //try
+            //{
                 var createdRecipe = await RecipeService.CreateAsync(recipe);
                 return Ok(createdRecipe);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return StatusCode(500);
+            //}
        
         }
 
