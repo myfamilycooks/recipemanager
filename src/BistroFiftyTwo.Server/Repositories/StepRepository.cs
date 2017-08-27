@@ -63,9 +63,21 @@ namespace BistroFiftyTwo.Server.Repositories
             return await Connection.QueryAsync<Step>("select * from recipe_steps where recipeid = @recipeId", new { recipeId });
         }
 
-        public Task<Step> UpdateAsync(Step item)
+        public async Task<Step> UpdateAsync(Step item)
         {
-            throw new NotImplementedException();
+            var query =
+               "update recipe_steps set ordinal = @ordinal, instructions = @instructions, modifiedby = @modifiedby, modifieddate = now() where id = @id returning *";
+
+            var record = new
+            {
+                id = item.ID,
+                ordinal = item.Ordinal,
+                recipeid = item.RecipeId,
+                instructions = item.Instructions,
+                modifiedby = item.ModifiedBy
+            };
+
+            return await Connection.QuerySingleAsync<Step>(query, record);
         }
     }
 }
