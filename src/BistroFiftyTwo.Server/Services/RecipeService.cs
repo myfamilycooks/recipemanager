@@ -48,28 +48,50 @@ namespace BistroFiftyTwo.Server.Services
 
         public async Task<Recipe> CreateAsync(Recipe recipe)
         {
+            if (String.IsNullOrEmpty(recipe.Notes))
+                recipe.Notes = "No Notes Yet.";
+
+            // TODO: Extract this out to a function of its own.
+            if (String.IsNullOrEmpty(recipe.CreatedBy) || string.IsNullOrEmpty(recipe.ModifiedBy))
+            {
+                recipe.CreatedBy = "chef"; // TODO: Make this not hard coded
+                recipe.ModifiedBy = "chef"; // TODO: Make this not hard coded
+            }
+
             var createdRecipe = await RecipeRepository.CreateAsync(recipe);
             var recipeIngredientTasks = new List<Task<RecipeIngredient>>();
             var recipeStepTasks = new List<Task<Step>>();
-
-            recipe.Ingredients.ToList().ForEach(r =>
+            
+            recipe.Ingredients.ToList().ForEach(async r =>
             {
                 r.RecipeId = createdRecipe.ID;
-                var task = RecipeIngredientRepository.CreateAsync(r);
+                if (String.IsNullOrEmpty(r.Notes))
+                    r.Notes = $"Notes for ingredient {r.Ordinal}";
 
-                recipeIngredientTasks.Add(task);
+                if (String.IsNullOrEmpty(r.CreatedBy) || string.IsNullOrEmpty(r.ModifiedBy))
+                {
+                    r.CreatedBy = "chef"; // TODO: Make this not hard coded
+                    r.ModifiedBy = "chef"; // TODO: Make this not hard coded
+                }
+
+               await RecipeIngredientRepository.CreateAsync(r);
+
             });
 
-            recipe.Steps.ToList().ForEach(s =>
+            recipe.Steps.ToList().ForEach(async s =>
             {
                 s.RecipeId = createdRecipe.ID;
-                var task = StepRepository.CreateAsync(s);
 
-                recipeStepTasks.Add(task);
+                if (String.IsNullOrEmpty(s.CreatedBy) || string.IsNullOrEmpty(s.ModifiedBy))
+                {
+                    s.CreatedBy = "chef"; // TODO: Make this not hard coded
+                    s.ModifiedBy = "chef"; // TODO: Make this not hard coded
+                }
+
+                await StepRepository.CreateAsync(s);
+
+ 
             });
-
-            await Task.WhenAll(recipeIngredientTasks);
-            await Task.WhenAll(recipeStepTasks);
 
             // pull the recipe from the db which also will populate the cache.
             return await GetByIdAsync(createdRecipe.ID);

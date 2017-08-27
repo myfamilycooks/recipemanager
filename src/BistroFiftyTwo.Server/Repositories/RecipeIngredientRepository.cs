@@ -71,7 +71,7 @@ namespace BistroFiftyTwo.Server.Repositories
         public async Task<RecipeIngredient> CreateAsync(RecipeIngredient item)
         {
             var query =
-                "insert into recipe_steps (recipeid, ordinal, quantity, units, ingredient, notes, createdby, modifiedby) values (@recipeid, @ordinal, @quantity, @units, @ingredient, @notes, @createdby, @modifiedby)";
+                "insert into recipe_ingredients (recipeid, ordinal, quantity, units, ingredient, notes, createdby, modifiedby) values (@recipeid, @ordinal, @quantity, @units, @ingredient, @notes, @createdby, @modifiedby) returning *";
 
             var record = new
             {

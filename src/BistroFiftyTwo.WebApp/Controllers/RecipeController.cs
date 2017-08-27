@@ -47,7 +47,7 @@ namespace BistroFiftyTwo.WebApp.Controllers
         }
 
         [Authorize, HttpPost]
-        public async Task<IActionResult> CreateRecipe(Recipe recipe)
+        public async Task<IActionResult> CreateRecipe([FromBody]Recipe recipe)
         {
             //try
             //{
