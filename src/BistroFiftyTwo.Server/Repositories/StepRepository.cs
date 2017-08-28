@@ -11,13 +11,19 @@ namespace BistroFiftyTwo.Server.Repositories
 {
     public class StepRepository : IStepRepository
     {
-        public StepRepository(IConfigurationService configurationService) 
+        protected IConfigurationService ConfigurationService { get; set; }
+        public StepRepository(IConfigurationService configurationService)
         {
-            Connection = new NpgsqlConnection(configurationService.Get("Data:Recipe:ConnectionString"));
-            Connection.Open();
+            ConfigurationService = configurationService;
         }
 
-        protected NpgsqlConnection Connection { get; set; }
+        private async Task<NpgsqlConnection> CreateConnection()
+        {
+            var connection = new NpgsqlConnection(ConfigurationService.Get("Data:Recipe:ConnectionString"));
+            await connection.OpenAsync();
+            return connection;
+        }
+
         public async Task<Step> CreateAsync(Step item)
         {
             var query =
@@ -32,14 +38,20 @@ namespace BistroFiftyTwo.Server.Repositories
                 modifiedby = item.ModifiedBy
             };
 
-            return await Connection.QuerySingleAsync<Step>(query, record);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<Step>(query, record);
+            }
         }
 
         public async Task DeleteAsync(Step item)
         {
             var query = "delete from recipe_steps where id = @id";
-
-            await Connection.ExecuteAsync(query, new { id = item.ID });
+             
+            using (var connection = await CreateConnection())
+            {
+                await connection.ExecuteAsync(query, new { id = item.ID });
+            }
         }
 
         public async Task<IEnumerable<Step>> GetAllAsync()
@@ -47,20 +59,36 @@ namespace BistroFiftyTwo.Server.Repositories
             var query =
                 "select id, ordinal, recipeid, instructions, createddate, createdby, modifieddate, modifiedby from recipe_steps";
 
-            return await Connection.QueryAsync<Step>(query);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QueryAsync<Step>(query);
+            }
         }
 
         public async Task<Step> GetAsync(Guid id)
         {
             var query =
                 "select id, ordinal, recipeid, instructions, createddate, createdby, modifieddate, modifiedby from recipe_steps id = @id";
-            
-            return await Connection.QuerySingleAsync<Step>(query, new {id});
+
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<Step>(query, new {id});
+            }
         }
 
         public async Task<IEnumerable<Step>> GetByRecipeIdAsync(Guid recipeId)
-        {
-            return await Connection.QueryAsync<Step>("select * from recipe_steps where recipeid = @recipeId", new { recipeId });
+        { 
+            var query = "select * from recipe_steps where recipeid = @recipeId";
+
+            var criteria = new
+            {
+                recipeId
+            };
+
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QueryAsync<Step>(query, criteria);
+            }
         }
 
         public async Task<Step> UpdateAsync(Step item)
@@ -77,7 +105,10 @@ namespace BistroFiftyTwo.Server.Repositories
                 modifiedby = item.ModifiedBy
             };
 
-            return await Connection.QuerySingleAsync<Step>(query, record);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<Step>(query, record);
+            }
         }
     }
 }
