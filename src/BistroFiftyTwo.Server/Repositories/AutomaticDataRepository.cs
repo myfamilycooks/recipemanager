@@ -36,7 +36,7 @@ namespace BistroFiftyTwo.Server.Repositories
             var paramCols = cols.Select(c => $"@{c}");
 
             var sql =
-                $"insert into ${item.TableName()} (${string.Join(",", cols)}) values (${string.Join(", ", paramCols)}) returning *";
+                $"insert into {item.TableName()} ({string.Join(",", cols)}) values ({string.Join(", ", paramCols)}) returning *";
 
             var dp = new DynamicParameters();
 

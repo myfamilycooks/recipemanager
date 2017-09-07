@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using AspNet.Security.OAuth.Validation;
 using AspNet.Security.OpenIdConnect.Extensions;
@@ -29,6 +30,7 @@ namespace BistroFiftyTwo.WebApp
                 .AddJsonFile("appsettings.json", false, true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
+
             Configuration = builder.Build();
         }
         public IContainer ApplicationContainer { get; private set; }
@@ -50,6 +52,8 @@ namespace BistroFiftyTwo.WebApp
                 options.UseOpenIddict();
             });
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IPrincipal>(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
 
             services.AddOpenIddict(options =>
             {
