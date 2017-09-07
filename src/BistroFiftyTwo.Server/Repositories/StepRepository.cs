@@ -9,25 +9,27 @@ using BistroFiftyTwo.Server.Services;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
-    public class StepRepository : IStepRepository
+    public class BaseRepository
     {
         protected IConfigurationService ConfigurationService { get; set; }
-        public StepRepository(IConfigurationService configurationService)
-        {
-            ConfigurationService = configurationService;
-        }
-
-        private async Task<NpgsqlConnection> CreateConnection()
+        protected async Task<NpgsqlConnection> CreateConnection()
         {
             var connection = new NpgsqlConnection(ConfigurationService.Get("Data:Recipe:ConnectionString"));
             await connection.OpenAsync();
             return connection;
         }
-
+    }
+    public class StepRepository : BaseRepository, IStepRepository
+    {
+        public StepRepository(IConfigurationService configurationService)
+        {
+            ConfigurationService = configurationService;
+        }
+        
         public async Task<Step> CreateAsync(Step item)
         {
             var query =
-                "insert into recipe_steps (ordinal, recipeid, instructions, createdby, modifiedby) values (@ordinal, @recipeid, @instructions, @createdbby, @modifiedby) returning *";
+                "insert into recipe_steps (ordinal, recipeid, instructions, createdby, modifiedby) values (@ordinal, @recipeid, @instructions, @createdby, @modifiedby) returning *";
 
             var record = new
             {

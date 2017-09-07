@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using BistroFiftyTwo.Server.Parser;
 
 namespace BistroFiftyTwo.Server.Services
@@ -16,13 +18,15 @@ namespace BistroFiftyTwo.Server.Services
         private IRecipeIngredientRepository RecipeIngredientRepository { get; set; }
         private IStepRepository StepRepository { get; set; }
         private IRecipeParser RecipeParser { get; set; }
+        private ClaimsPrincipal Principal { get; set; }
 
-        public RecipeService(IRecipeRepository recipeRepository, IRecipeIngredientRepository recipeIngredientRepository, IStepRepository stepRepository)
+        public RecipeService(IRecipeRepository recipeRepository, IRecipeIngredientRepository recipeIngredientRepository, IStepRepository stepRepository, IPrincipal principal)
         {
             RecipeRepository = recipeRepository;
             RecipeIngredientRepository = recipeIngredientRepository;
             StepRepository = stepRepository;
             RecipeParser = new RecipeParser(new ParserConfiguration());
+            Principal = principal as ClaimsPrincipal;
         }
 
         public async Task<Recipe> GetByIdAsync(Guid id)
@@ -54,8 +58,8 @@ namespace BistroFiftyTwo.Server.Services
             // TODO: Extract this out to a function of its own.
             if (String.IsNullOrEmpty(recipe.CreatedBy) || string.IsNullOrEmpty(recipe.ModifiedBy))
             {
-                recipe.CreatedBy = "chef"; // TODO: Make this not hard coded
-                recipe.ModifiedBy = "chef"; // TODO: Make this not hard coded
+                recipe.CreatedBy = Principal.Identity.Name;
+                recipe.ModifiedBy = Principal.Identity.Name;
             }
 
             var createdRecipe = await RecipeRepository.CreateAsync(recipe);
@@ -68,10 +72,13 @@ namespace BistroFiftyTwo.Server.Services
                 if (String.IsNullOrEmpty(r.Notes))
                     r.Notes = $"Notes for ingredient {r.Ordinal}";
 
+                if (String.IsNullOrEmpty(r.Units))
+                    r.Units = "items";
+
                 if (String.IsNullOrEmpty(r.CreatedBy) || string.IsNullOrEmpty(r.ModifiedBy))
                 {
-                    r.CreatedBy = "chef"; // TODO: Make this not hard coded
-                    r.ModifiedBy = "chef"; // TODO: Make this not hard coded
+                    r.CreatedBy = Principal.Identity.Name;
+                    r.ModifiedBy = Principal.Identity.Name;
                 }
 
                await RecipeIngredientRepository.CreateAsync(r);
@@ -84,8 +91,8 @@ namespace BistroFiftyTwo.Server.Services
 
                 if (String.IsNullOrEmpty(s.CreatedBy) || string.IsNullOrEmpty(s.ModifiedBy))
                 {
-                    s.CreatedBy = "chef"; // TODO: Make this not hard coded
-                    s.ModifiedBy = "chef"; // TODO: Make this not hard coded
+                    s.CreatedBy = Principal.Identity.Name;
+                    s.ModifiedBy = Principal.Identity.Name;
                 }
 
                 await StepRepository.CreateAsync(s);

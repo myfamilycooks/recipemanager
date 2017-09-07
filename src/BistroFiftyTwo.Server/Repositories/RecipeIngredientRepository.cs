@@ -11,17 +11,12 @@ using Npgsql;
 namespace BistroFiftyTwo.Server.Repositories
 {
 
-    public class RecipeIngredientRepository :  IRecipeIngredientRepository
-    {
-        protected IConfigurationService ConfigurationService { get; set; }
-        public RecipeIngredientRepository(IConfigurationService configurationService)  
+    public class RecipeIngredientRepository : BaseRepository, IRecipeIngredientRepository
+    { 
+        public RecipeIngredientRepository(IConfigurationService configurationService)
         {
-            Connection = new NpgsqlConnection(configurationService.Get("Data:Recipe:ConnectionString"));
-            Connection.Open();
-        }
-
-        protected NpgsqlConnection Connection { get; set; }
-
+            ConfigurationService = configurationService;
+        } 
         private bool disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
@@ -57,7 +52,10 @@ namespace BistroFiftyTwo.Server.Repositories
 
         public async Task<IEnumerable<RecipeIngredient>> GetByRecipeIdAsync(Guid recipeId)
         {
-            return await Connection.QueryAsync<RecipeIngredient>("select * from recipe_ingredients where recipeid = @recipeId", new { recipeId });
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QueryAsync<RecipeIngredient>("select * from recipe_ingredients where recipeid = @recipeId", new { recipeId });
+            }
         }
 
         public async Task<RecipeIngredient> GetAsync(Guid id)
@@ -65,7 +63,10 @@ namespace BistroFiftyTwo.Server.Repositories
             var query =
                 "select id, recipeid, ordinal, quantity, units, item, notes, createddate, createdby, modifieddate, modifiedby from recipe_ingredients where id = @id";
 
-            return await Connection.QuerySingleAsync<RecipeIngredient>(query, new {id});
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<RecipeIngredient>(query, new {id});
+            }
         }
 
         public async Task<RecipeIngredient> CreateAsync(RecipeIngredient item)
@@ -84,8 +85,10 @@ namespace BistroFiftyTwo.Server.Repositories
                 createdby = item.CreatedBy,
                 modifiedby = item.ModifiedBy
             };
-
-            return await Connection.QuerySingleAsync<RecipeIngredient>(query, record);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<RecipeIngredient>(query, record);
+            }
         }
 
         public async Task<IEnumerable<RecipeIngredient>> GetAllAsync()
@@ -93,7 +96,10 @@ namespace BistroFiftyTwo.Server.Repositories
             var query =
                 "select id, recipeid, ordinal, quantity, units, item, notes, createddate, createdby, modifieddate, modifiedby from recipe_ingredients";
 
-            return await Connection.QueryAsync<RecipeIngredient>(query);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QueryAsync<RecipeIngredient>(query);
+            }
         }
 
         public async Task<RecipeIngredient> UpdateAsync(RecipeIngredient item)
@@ -112,15 +118,20 @@ namespace BistroFiftyTwo.Server.Repositories
                 notes = item.Notes,
                 modifiedby = item.ModifiedBy
             };
-
-            return await Connection.QuerySingleAsync<RecipeIngredient>(query, record);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<RecipeIngredient>(query, record);
+            }
         }
 
         public async Task DeleteAsync(RecipeIngredient item)
         {
             var query = "delete from recipe_ingredients where id = @id";
 
-            await Connection.QueryAsync(query);
+            using (var connection = await CreateConnection())
+            {
+                await connection.QueryAsync(query);
+            }
         }
     }
 }

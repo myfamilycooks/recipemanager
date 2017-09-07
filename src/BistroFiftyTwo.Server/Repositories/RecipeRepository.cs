@@ -9,14 +9,11 @@ using Dapper;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
-    public class RecipeRepository : IRecipeRepository
+    public class RecipeRepository :BaseRepository, IRecipeRepository
     {
-
-        protected NpgsqlConnection Connection { get; set; }
-        public RecipeRepository(IConfigurationService configurationService)  
+        public RecipeRepository(IConfigurationService configurationService)
         {
-            Connection = new NpgsqlConnection(configurationService.Get("Data:Recipe:ConnectionString"));
-            Connection.Open();
+            ConfigurationService = configurationService;
         }
  
         #region IDisposable Support
@@ -55,7 +52,10 @@ namespace BistroFiftyTwo.Server.Repositories
 
         public async Task<Recipe> GetByKeyAsync(string key)
         {
-            return await Connection.QuerySingleAsync<Recipe>("select * from recipes where key = @key", new { key });
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<Recipe>("select * from recipes where key = @key", new {key});
+            }
         }
         #endregion
 
@@ -64,7 +64,10 @@ namespace BistroFiftyTwo.Server.Repositories
             var query =
                 "select id, title, key, tags, description, notes, createddate, modifieddate, modifiedby from recipes where id = @id";
 
-            return await Connection.QuerySingleAsync<Recipe>(query, id);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<Recipe>(query, new { id });
+            }
         }
 
         public async Task<Recipe> CreateAsync(Recipe item)
@@ -83,7 +86,10 @@ namespace BistroFiftyTwo.Server.Repositories
                 modifiedby = item.ModifiedBy
             };
 
-            return await Connection.QuerySingleAsync<Recipe>(query, record);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<Recipe>(query, record);
+            }
         }
 
         public async Task<IEnumerable<Recipe>> GetAllAsync()
@@ -91,7 +97,10 @@ namespace BistroFiftyTwo.Server.Repositories
             var query =
                 "select id, title, key, tags, description, notes, createddate, modifieddate, modifiedby from recipes";
 
-            return await Connection.QueryAsync<Recipe>(query);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QueryAsync<Recipe>(query);
+            }
         }
 
         public async Task<Recipe> UpdateAsync(Recipe item)
@@ -111,14 +120,18 @@ namespace BistroFiftyTwo.Server.Repositories
                 modifiedby = item.ModifiedBy
             };
 
-            return await Connection.QuerySingleAsync<Recipe>(query, record);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<Recipe>(query, record);
+            }
         }
 
         public async Task DeleteAsync(Recipe item)
         {
             var query = "delete from recipes where id = @id";
-
-            await Connection.ExecuteAsync(query, new {id = item.ID});
+            
+            using (var connection = await CreateConnection())
+                await connection.ExecuteAsync(query, new {id = item.ID});
         }
     }
 }
