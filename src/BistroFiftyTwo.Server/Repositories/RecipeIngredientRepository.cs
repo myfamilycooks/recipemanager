@@ -94,7 +94,7 @@ namespace BistroFiftyTwo.Server.Repositories
         public async Task<IEnumerable<RecipeIngredient>> GetAllAsync()
         {
             var query =
-                "select id, recipeid, ordinal, quantity, units, item, notes, createddate, createdby, modifieddate, modifiedby from recipe_ingredients";
+                "select id, recipeid, ordinal, quantity, units, ingredient, notes, createddate, createdby, modifieddate, modifiedby from recipe_ingredients";
 
             using (var connection = await CreateConnection())
             {
