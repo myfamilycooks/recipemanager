@@ -31,7 +31,10 @@ class Landing extends React.Component {
                 <a className="nav-link" href="#">Home <span className="sr-only">(current)</span></a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Link</a>
+                <a className="nav-link" href="#">New Recipe</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">My Recipes</a>
               </li>
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
@@ -42,27 +45,20 @@ class Landing extends React.Component {
                 </div>
               </li>
             </ul>
+            <div className="form-inline my-2 my-lg-0">
+          <input className="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" />
+          <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </div>
           </div>
         </nav>
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-md-2 col-lg-1 " style={{backgroundColor: "#f2f2f2", padding: "3rem"}}>
-               <span>&nbsp;</span>
-              <ul className="nav flex-column">
-                <li className="nav-item">
-                  <a className="nav-link active" href="#">My Recipes</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">New Recipe</a>
-                </li>
-              </ul>
-            </div>
+        <div className="container">
+         
             <div className="col-md-9 starter-template" style={{padding: "3rem 1.5rem"}}>
               <span>&nbsp;</span>
               <h1> <span>Hello {this.props.profile.user.chef}</span></h1>
               <p className="lead">Use this document as a way to quickly start any new project.<br /> All you get is this text and a mostly barebones HTML document.</p>
             </div>
-            </div>
+        
         </div>
     </div>
     }
