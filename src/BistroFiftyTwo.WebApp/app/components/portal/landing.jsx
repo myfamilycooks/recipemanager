@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Switch, Route } from 'react-router-dom'
 import * as actions from '../../actions';
 import Header from '../header';
+import Tasks from './tasks';
 
 class Landing extends React.Component {
   componentDidMount() {
@@ -53,10 +55,12 @@ class Landing extends React.Component {
         </nav>
         <div className="container">
          
-            <div className="col-md-9 starter-template" style={{padding: "3rem 1.5rem"}}>
+            <div className=" starter-template" style={{padding: "3rem 1.5rem"}}>
               <span>&nbsp;</span>
               <h1> <span>Hello {this.props.profile.user.chef}</span></h1>
-              <p className="lead">Use this document as a way to quickly start any new project.<br /> All you get is this text and a mostly barebones HTML document.</p>
+              <Switch>
+                <Route component={Tasks} />
+              </Switch>
             </div>
         
         </div>
