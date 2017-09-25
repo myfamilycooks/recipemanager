@@ -28,13 +28,17 @@ begin
 	if (_patch_required > 0) then
 
 		create table recipe_histories (
-			id serial not null,
+			id uuid not null default(uuid_generate_v4()),
 			recipeid uuid not null,
-			reciperawtext text not null,
+			version int not null,
+			fulltext text not null,
 			createddate timestamptz not null default(now()),
+			createdby varchar(64) not null,
+			modifieddate timestamptz default(now()),
+			modifiedby varchar(64) not null,
 			constraint pk_histories_id primary key (id),
 			constraint fk_histories_recipes FOREIGN key (recipeid) references recipes (id)
-		);	
+		);
 
 		update schemaversion set current_version = false where major = _old_major and minor = _old_minor and revision = _old_revision and schemaname = _schemaname;
 
