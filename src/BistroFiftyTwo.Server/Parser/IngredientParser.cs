@@ -89,7 +89,7 @@ namespace BistroFiftyTwo.Server.Parser
             {
                 if (unit.Value.Contains(lowerToken))
                 {
-                    recipeIngredient.Units = ingredientTokens.Value;
+                    recipeIngredient.Units = unit.Key;
                     ingredientTokens = ingredientTokens.Next;
                     break;
                 }
