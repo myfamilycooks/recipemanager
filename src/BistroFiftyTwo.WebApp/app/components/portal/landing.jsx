@@ -21,7 +21,7 @@ class Landing extends React.Component {
       return <p>Loading…</p>;
     }
     if (this.props.profile.user) {
-      console.log(this.props.match);
+      const token = JSON.parse(localStorage.getItem('token'));
       return <div >
 
         <div className="container">
@@ -30,8 +30,18 @@ class Landing extends React.Component {
               <span>&nbsp;</span>
               <h1> <span>Hello {this.props.profile.user.chef}</span></h1>
                            
-                <Route component={Tasks} />
-              
+              <Route component={Tasks} />
+              <div className="card-deck">
+              <div className="card">
+                <div className="card-body">
+                  <h4 className="card-title">Developer Tools</h4>
+                  <h6 className="card-subtitle mb-2 text-muted">This is only present in development mode.</h6>
+                  <p className="card-text">
+                    {token.access_token}
+                  </p>
+                </div>
+              </div>
+              </div>
             </div>
         
         </div>
