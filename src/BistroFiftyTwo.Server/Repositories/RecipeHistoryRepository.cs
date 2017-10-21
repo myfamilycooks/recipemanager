@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
+using BistroFiftyTwo.Server.Services;
 using Dapper;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
     public class RecipeHistoryRepository : BaseRepository, IRecipeHistoryRepository
     {
+        public RecipeHistoryRepository(IConfigurationService configurationService)
+        {
+            ConfigurationService = configurationService;
+        }
         public async Task<RecipeHistory> GetAsync(Guid id)
         {
             var query =
@@ -93,11 +98,10 @@ namespace BistroFiftyTwo.Server.Repositories
         public RecipeHistory Create(RecipeHistory item)
         {
             var query =
-                @"insert into recipe_histories (recipeid, version, fulltext, createddate, createdby, modifieddate, modifiedby) values (@recipeid, @version, @fulltext,  @createdby,   @modifiedby) returning *";
+                @"insert into recipe_histories (version, fulltext,  createdby,  modifiedby) values (  @version, @fulltext,  @createdby,   @modifiedby) returning *";
 
             var record = new
             {
-                recipeid = item.RecipeID,
                 version = item.Version,
                 fulltext = item.FullText,
                 createdby = item.CreatedBy,
