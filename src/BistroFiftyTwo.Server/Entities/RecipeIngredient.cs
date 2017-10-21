@@ -7,17 +7,17 @@ namespace BistroFiftyTwo.Server.Entities
 {
     public class RecipeIngredient : IBistroEntity
     {
-        public Guid ID {get; set;}
         public int Ordinal { get; set; }
         public Guid RecipeId { get; set; }
-        public Double Quantity { get; set; }
+        public double Quantity { get; set; }
         public string Units { get; set; }
         public string Ingredient { get; set; }
         public string Notes { get; set; }
-        public DateTime CreatedDate {get; set;}
-        public string CreatedBy {get; set;}
-        public DateTime ModifiedDate {get; set;}
-        public string ModifiedBy {get; set;}
+        public Guid ID { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string ModifiedBy { get; set; }
 
         public List<string> Columns()
         {

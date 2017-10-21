@@ -7,14 +7,14 @@ namespace BistroFiftyTwo.Server.Entities
 {
     public class Step : IBistroEntity
     {
-        public Guid ID {get; set;}
         public int Ordinal { get; set; }
         public Guid RecipeId { get; set; }
         public string Instructions { get; set; }
-        public DateTime CreatedDate {get; set;}
-        public string CreatedBy {get; set;}
-        public DateTime ModifiedDate {get; set;}
-        public string ModifiedBy {get; set;}
+        public Guid ID { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string ModifiedBy { get; set; }
 
         public List<string> Columns()
         {

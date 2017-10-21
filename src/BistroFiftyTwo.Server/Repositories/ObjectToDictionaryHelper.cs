@@ -34,7 +34,7 @@ namespace BistroFiftyTwo.Server.Repositories
         //    }
         //    return dictionary;
         //}
-        private static void AddPropertyToDictionary<T>(System.ComponentModel.PropertyDescriptor property, object source,
+        private static void AddPropertyToDictionary<T>(PropertyDescriptor property, object source,
             Dictionary<string, T> dictionary)
         {
             var value = property.GetValue(source);

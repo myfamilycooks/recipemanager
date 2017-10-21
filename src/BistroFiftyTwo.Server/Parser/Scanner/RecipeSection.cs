@@ -8,6 +8,7 @@ namespace BistroFiftyTwo.Server.Parser.Scanner
         {
             Content = new List<string>();
         }
+
         public string SectionName { get; set; }
         public List<string> Content { get; set; }
     }

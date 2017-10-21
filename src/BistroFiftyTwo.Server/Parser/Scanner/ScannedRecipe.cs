@@ -1,4 +1,6 @@
-﻿namespace BistroFiftyTwo.Server.Parser.Scanner
+﻿using System;
+
+namespace BistroFiftyTwo.Server.Parser.Scanner
 {
     public class ScannedRecipe
     {
@@ -7,6 +9,7 @@
             DescriptionSection = new RecipeSection();
             IngredientSection = new RecipeSection();
             InstructionSection = new RecipeSection();
+            Title = $"Untitled-{DateTime.Now.Ticks}";
         }
 
         public RecipeSection DescriptionSection { get; set; }

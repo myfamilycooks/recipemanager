@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
-using Npgsql;
 using Dapper;
-using System.Data;
+using Npgsql;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
@@ -50,7 +50,8 @@ namespace BistroFiftyTwo.Server.Repositories
 
         public async Task<UserAccount> GetAsync(Guid id)
         {
-            return await Connection.QuerySingleAsync<UserAccount>("select * from user_accounts where id = @id", new {id});
+            return await Connection.QuerySingleAsync<UserAccount>("select * from user_accounts where id = @id",
+                new {id});
         }
 
         public async Task<IEnumerable<UserAccount>> GetAllAsync()

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -13,16 +12,14 @@ namespace BistroFiftyTwo.Server.Parser
             var tokens = new List<string>();
             var token = new Token();
 
-            if(parts != null && parts.Any())
-            {
+            if (parts != null && parts.Any())
                 tokens = parts.ToList();
-            }
 
             tokens.ForEach(t =>
             {
-                if (!String.IsNullOrEmpty(t))
+                if (!string.IsNullOrEmpty(t))
                 {
-                    var newToken = new Token()
+                    var newToken = new Token
                     {
                         Previous = token
                     };

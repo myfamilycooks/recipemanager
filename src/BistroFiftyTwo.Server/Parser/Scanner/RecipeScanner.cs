@@ -1,56 +1,52 @@
 ﻿using System;
-using System.Text;
 using System.Linq;
 
 namespace BistroFiftyTwo.Server.Parser.Scanner
 {
     public class RecipeScanner
     {
-        protected ParserConfiguration Configuration { get; set; }
-
         public RecipeScanner(ParserConfiguration config)
         {
             Configuration = config;
         }
 
+        protected ParserConfiguration Configuration { get; set; }
+
         public ScannedRecipe Scan(string recipe)
         {
             var scanned = new ScannedRecipe();
 
-            var lines = recipe.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).ToList();
+            var lines = recipe.Split(new[] {"\r\n", "\n"}, StringSplitOptions.None).ToList();
 
             if (lines.First() != "description" &&
                 lines.First() != "instructions" &&
                 lines.First() != "ingredients" &&
-                !String.IsNullOrEmpty(lines.First().Trim()))
-            {
+                !string.IsNullOrEmpty(lines.First().Trim()))
                 scanned.Title = lines.First();
-            }
             var currentSection = new RecipeSection();
 
             lines.ForEach(s =>
             {
-                switch (s.Trim().ToLower()) {
+                switch (s.Trim().ToLower())
+                {
                     case "description":
                         CloseSection(scanned, "description", ref currentSection);
                         break;
                     case "instructions":
-                        CloseSection(scanned, "instructions",ref currentSection);
+                        CloseSection(scanned, "instructions", ref currentSection);
                         break;
                     case "ingredients":
-                        CloseSection(scanned, "ingredients",ref currentSection);
+                        CloseSection(scanned, "ingredients", ref currentSection);
                         break;
                     default:
-                        if(!String.IsNullOrEmpty(s))
-                        {
+                        if (!string.IsNullOrEmpty(s))
                             currentSection.Content.Add(s);
-                        }
                         break;
                 }
             });
 
             // close the last section...
-            CloseSection(scanned, "",ref currentSection);
+            CloseSection(scanned, "", ref currentSection);
 
             return scanned;
         }
@@ -70,7 +66,7 @@ namespace BistroFiftyTwo.Server.Parser.Scanner
                     break;
             }
 
-            currentSection = new RecipeSection() { SectionName = newSectionName };
+            currentSection = new RecipeSection {SectionName = newSectionName};
         }
     }
 }
