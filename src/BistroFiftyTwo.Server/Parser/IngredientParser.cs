@@ -91,7 +91,7 @@ namespace BistroFiftyTwo.Server.Parser
             foreach (var unit in Configuration.MeasurementUnits)
                 if (unit.Value.Contains(lowerToken))
                 {
-                    recipeIngredient.Units = ingredientTokens.Value;
+                    recipeIngredient.Units = unit.Key;
                     ingredientTokens = ingredientTokens.Next;
                     break;
                 }
