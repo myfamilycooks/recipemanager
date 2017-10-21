@@ -1,6 +1,6 @@
-﻿using BistroFiftyTwo.Server.Entities;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Parser;
 
 namespace BistroFiftyTwo.Server.Services

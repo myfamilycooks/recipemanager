@@ -72,7 +72,7 @@ namespace BistroFiftyTwo.Tests.Parser
             var ingredient = new RecipeIngredient()
             {
                 Quantity = 1,
-                Units = "cup",
+                Units = "Cups",
                 Ingredient = "onions",
                 Notes = "diced"
             };

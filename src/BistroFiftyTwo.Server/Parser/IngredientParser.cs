@@ -1,19 +1,20 @@
-﻿using BistroFiftyTwo.Server.Entities;
-using System;
+﻿using System.Linq;
 using System.Text;
-using System.Linq;
 using System.Text.RegularExpressions;
+using BistroFiftyTwo.Server.Entities;
 
 namespace BistroFiftyTwo.Server.Parser
 {
     public class IngredientParser
     {
-        protected ParserConfiguration Configuration { get; set; }
-        public IngredientParser(ParserConfiguration config) {
+        private static readonly Regex QuantityRegex = new Regex(@"[0-9]+(\/[0-9]+)?", RegexOptions.Compiled);
+
+        public IngredientParser(ParserConfiguration config)
+        {
             Configuration = config;
         }
 
-        private static Regex QuantityRegex = new Regex(@"[0-9]+(\/[0-9]+)?", RegexOptions.Compiled);
+        protected ParserConfiguration Configuration { get; set; }
 
         public RecipeIngredient Parse(string ingredientText)
         {
@@ -26,7 +27,7 @@ namespace BistroFiftyTwo.Server.Parser
 
             var ingredientTokens = Lexer.Tokenize(ingredientText);
 
-            recipeIngredient = ParseQuantity(recipeIngredient,ref ingredientTokens);
+            recipeIngredient = ParseQuantity(recipeIngredient, ref ingredientTokens);
             recipeIngredient = ParseUnits(recipeIngredient, ref ingredientTokens);
             recipeIngredient = ParseItemQualifiers(recipeIngredient, ref ingredientTokens);
             recipeIngredient = ParseItem(recipeIngredient, ref ingredientTokens);
@@ -39,7 +40,8 @@ namespace BistroFiftyTwo.Server.Parser
         {
             var ingredientItem = new StringBuilder();
 
-            while (ingredientTokens != null && !String.IsNullOrEmpty(ingredientTokens.Value) && Configuration.IngredientQualifiers.Contains(ingredientTokens.Value))
+            while (ingredientTokens != null && !string.IsNullOrEmpty(ingredientTokens.Value) &&
+                   Configuration.IngredientQualifiers.Contains(ingredientTokens.Value))
             {
                 ingredientItem.Append($"{ingredientTokens.Value} ");
                 ingredientTokens = ingredientTokens.Next;
@@ -53,18 +55,18 @@ namespace BistroFiftyTwo.Server.Parser
         {
             var notesItem = new StringBuilder();
 
-            while (ingredientTokens != null && !String.IsNullOrEmpty(ingredientTokens.Value))
+            while (ingredientTokens != null && !string.IsNullOrEmpty(ingredientTokens.Value))
             {
-                if(!ingredientTokens.Value.Equals("--"))
-                {
+                if (!ingredientTokens.Value.Equals("--"))
                     notesItem.Append($"{ingredientTokens.Value} ");
-                }
 
                 ingredientTokens = ingredientTokens.Next;
             }
 
-            if(!String.IsNullOrEmpty(notesItem.ToString()))
-                recipeIngredient.Notes = String.IsNullOrEmpty(recipeIngredient.Notes) ? notesItem.ToString().Trim() : $"{recipeIngredient.Notes}, {notesItem.ToString().Trim()}";
+            if (!string.IsNullOrEmpty(notesItem.ToString()))
+                recipeIngredient.Notes = string.IsNullOrEmpty(recipeIngredient.Notes)
+                    ? notesItem.ToString().Trim()
+                    : $"{recipeIngredient.Notes}, {notesItem.ToString().Trim()}";
             return recipeIngredient;
         }
 
@@ -72,7 +74,8 @@ namespace BistroFiftyTwo.Server.Parser
         {
             var ingredientItem = new StringBuilder();
 
-            while (ingredientTokens != null && !String.IsNullOrEmpty(ingredientTokens.Value) && !ingredientTokens.Value.Equals("--"))
+            while (ingredientTokens != null && !string.IsNullOrEmpty(ingredientTokens.Value) &&
+                   !ingredientTokens.Value.Equals("--"))
             {
                 ingredientItem.Append($"{ingredientTokens.Value} ");
                 ingredientTokens = ingredientTokens.Next;
@@ -85,15 +88,13 @@ namespace BistroFiftyTwo.Server.Parser
         private RecipeIngredient ParseUnits(RecipeIngredient recipeIngredient, ref Token ingredientTokens)
         {
             var lowerToken = ingredientTokens.Value.ToLower();
-            foreach(var unit in Configuration.MeasurementUnits)
-            {
+            foreach (var unit in Configuration.MeasurementUnits)
                 if (unit.Value.Contains(lowerToken))
                 {
                     recipeIngredient.Units = ingredientTokens.Value;
                     ingredientTokens = ingredientTokens.Next;
                     break;
                 }
-            }
 
             return recipeIngredient;
         }
@@ -101,12 +102,11 @@ namespace BistroFiftyTwo.Server.Parser
         private RecipeIngredient ParseQuantity(RecipeIngredient recipeIngredient, ref Token ingredientTokens)
         {
             if (QuantityRegex.IsMatch(ingredientTokens.Value))
-            {
-                if(ingredientTokens.Next != null && QuantityRegex.IsMatch(ingredientTokens.Next.Value))
+                if (ingredientTokens.Next != null && QuantityRegex.IsMatch(ingredientTokens.Next.Value))
                 {
-                    double fractionalValue = ParseFraction(ingredientTokens.Next.Value);
+                    var fractionalValue = ParseFraction(ingredientTokens.Next.Value);
 
-                    var otherValue = Double.Parse(ingredientTokens.Value);
+                    var otherValue = double.Parse(ingredientTokens.Value);
 
                     recipeIngredient.Quantity = otherValue + fractionalValue;
 
@@ -115,15 +115,12 @@ namespace BistroFiftyTwo.Server.Parser
                 else
                 {
                     if (ingredientTokens.Value.Contains('/'))
-                    {
                         recipeIngredient.Quantity = ParseFraction(ingredientTokens.Value);
-                    }
                     else
-                        recipeIngredient.Quantity = Double.Parse(ingredientTokens.Value);
+                        recipeIngredient.Quantity = double.Parse(ingredientTokens.Value);
 
                     ingredientTokens = ingredientTokens.Next;
                 }
-            }
 
             return recipeIngredient;
         }
@@ -131,8 +128,8 @@ namespace BistroFiftyTwo.Server.Parser
         private double ParseFraction(string fraction)
         {
             var splitFraction = fraction.Split('/');
-            var numerator = Double.Parse(splitFraction.First());
-            var denominator = Double.Parse(splitFraction.Last());
+            var numerator = double.Parse(splitFraction.First());
+            var denominator = double.Parse(splitFraction.Last());
             var fractionalValue = numerator / denominator;
             return fractionalValue;
         }

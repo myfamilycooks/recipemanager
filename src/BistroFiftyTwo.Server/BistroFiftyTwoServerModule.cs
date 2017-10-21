@@ -1,7 +1,4 @@
 ﻿using Autofac;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BistroFiftyTwo.Server
 {
@@ -11,8 +8,10 @@ namespace BistroFiftyTwo.Server
         {
             base.Load(builder);
 
-            builder.RegisterAssemblyTypes(ThisAssembly).Where(t => t.Name.EndsWith("Service")).AsImplementedInterfaces();
-            builder.RegisterAssemblyTypes(ThisAssembly).Where(t => t.Name.EndsWith("Repository")).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(ThisAssembly).Where(t => t.Name.EndsWith("Service"))
+                .AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(ThisAssembly).Where(t => t.Name.EndsWith("Repository"))
+                .AsImplementedInterfaces();
         }
     }
 }

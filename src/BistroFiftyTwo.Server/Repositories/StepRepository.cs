@@ -1,31 +1,19 @@
-﻿using BistroFiftyTwo.Server.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Dapper;
-using Npgsql;
+using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
+using Dapper;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
-    public class BaseRepository
-    {
-        protected IConfigurationService ConfigurationService { get; set; }
-        protected async Task<NpgsqlConnection> CreateConnection()
-        {
-            var connection = new NpgsqlConnection(ConfigurationService.Get("Data:Recipe:ConnectionString"));
-            await connection.OpenAsync();
-            return connection;
-        }
-    }
     public class StepRepository : BaseRepository, IStepRepository
     {
         public StepRepository(IConfigurationService configurationService)
         {
             ConfigurationService = configurationService;
         }
-        
+
         public async Task<Step> CreateAsync(Step item)
         {
             var query =
@@ -49,10 +37,10 @@ namespace BistroFiftyTwo.Server.Repositories
         public async Task DeleteAsync(Step item)
         {
             var query = "delete from recipe_steps where id = @id";
-             
+
             using (var connection = await CreateConnection())
             {
-                await connection.ExecuteAsync(query, new { id = item.ID });
+                await connection.ExecuteAsync(query, new {id = item.ID});
             }
         }
 
@@ -79,7 +67,7 @@ namespace BistroFiftyTwo.Server.Repositories
         }
 
         public async Task<IEnumerable<Step>> GetByRecipeIdAsync(Guid recipeId)
-        { 
+        {
             var query = "select * from recipe_steps where recipeid = @recipeId";
 
             var criteria = new
@@ -96,7 +84,7 @@ namespace BistroFiftyTwo.Server.Repositories
         public async Task<Step> UpdateAsync(Step item)
         {
             var query =
-               "update recipe_steps set ordinal = @ordinal, instructions = @instructions, modifiedby = @modifiedby, modifieddate = now() where id = @id returning *";
+                "update recipe_steps set ordinal = @ordinal, instructions = @instructions, modifiedby = @modifiedby, modifieddate = now() where id = @id returning *";
 
             var record = new
             {

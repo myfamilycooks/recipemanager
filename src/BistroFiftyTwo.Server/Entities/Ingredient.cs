@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BistroFiftyTwo.Server.Entities
+﻿namespace BistroFiftyTwo.Server.Entities
 {
     public class Ingredient
     {

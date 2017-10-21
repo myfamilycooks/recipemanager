@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
-using Npgsql;
 using Dapper;
+using Npgsql;
 
 namespace BistroFiftyTwo.Server.Repositories
 {

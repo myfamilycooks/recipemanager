@@ -1,7 +1,7 @@
-﻿using BistroFiftyTwo.Server.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BistroFiftyTwo.Server.Entities;
 
 namespace BistroFiftyTwo.Server.Repositories
 {

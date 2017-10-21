@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System;
+﻿using System;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace BistroFiftyTwo.Server.Services
 {
@@ -16,7 +16,8 @@ namespace BistroFiftyTwo.Server.Services
         public string SlowOneWayHash(string clearText, byte[] salt)
         {
             return
-                Convert.ToBase64String(KeyDerivation.Pbkdf2(clearText, salt, KeyDerivationPrf.HMACSHA512, 10000, 256 / 8));
+                Convert.ToBase64String(KeyDerivation.Pbkdf2(clearText, salt, KeyDerivationPrf.HMACSHA512, 10000,
+                    256 / 8));
         }
 
         public string GenerateSalt()
