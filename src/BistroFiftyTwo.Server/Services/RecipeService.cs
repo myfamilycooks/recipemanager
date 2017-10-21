@@ -88,6 +88,11 @@ namespace BistroFiftyTwo.Server.Services
                 await StepRepository.CreateAsync(s);
             });
 
+            // set the historical version correctly. - may need to do more work here for revisions, set version correctly.
+            var recipeHistory = await RecipeHistoryRepository.GetAsync(recipe.FullTextReference);
+            recipeHistory.RecipeID = createdRecipe.ID;
+            await RecipeHistoryRepository.UpdateAsync(recipeHistory);
+
             // pull the recipe from the db which also will populate the cache.
             return await GetByIdAsync(createdRecipe.ID);
         }
