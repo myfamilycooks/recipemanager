@@ -21,7 +21,7 @@ export default class App extends Component {
           <Route exact path="/login" component={Login} />
           <Route exact path="/portal/recipe/editor" component={RecipeEditor} />
           <Route exact path="/portal" component={Portal} />
-          <Route exact path="/recipe/:recipeId" component={RecipeDisplay} />
+          <Route exact path="/portal/recipe/:recipeId" component={RecipeDisplay} />
           <Route exact path="/" component={Portal} />
           
         </Switch>
