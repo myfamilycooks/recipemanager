@@ -68,7 +68,7 @@ namespace BistroFiftyTwo.WebApp
                 // Enable the password flow.
                 options.AllowPasswordFlow()
                     .AllowRefreshTokenFlow();
-             
+                
                 // During development, you can disable the HTTPS requirement.
                 options.DisableHttpsRequirement();
             });
