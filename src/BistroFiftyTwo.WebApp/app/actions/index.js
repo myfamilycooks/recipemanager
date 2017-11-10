@@ -18,7 +18,7 @@ export function loginUser({ userid, password }) {
         axios.post(`${ROOT_URL}/connect/token`, querystring.stringify({
                 username: userid,
                 password,
-                grant_type: 'password',
+                grant_type: 'password', scope: 'openid offline_access'
             }), {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
