@@ -27,26 +27,6 @@ begin
 
 	if (_patch_required > 0) then
 
-		create table organization_accounts (
-			id uuid not null default(uuid_generate_v4()),
-			userlogin varchar(64) not null,
-			password varbinary(128) not null,
-			fullname varchar(64) not null,
-			createddate timestamptz not null default(now()),
-			createdby varchar(64) not null,
-			modifieddate timestamptz default(now()),
-			modifiedby varchar(64) not null,
-			constraint pk_account_id primary key (id)
-		);
-
-		create table organization_members (
-			accountid uuid not null,
-			organizationid uuid not null,
-			accesslevel int not null,
-			constraint pk_member_userorg primary key (accountid, organizationid),
-			constraint fk_member_accounts foreign key (accountid) references user_accounts (id),
-			constraint fk_member_organizations foreign key (organizationid) references organizations (id)
-		);
 
 		create table organizations (
 			id uuid not null default(uuid_generate_v4()),
@@ -60,6 +40,28 @@ begin
 			constraint pk_organizaton_id primary key (id)
 		);
 		
+
+		create table organization_accounts (
+			id uuid not null default(uuid_generate_v4()),
+			userlogin varchar(64) not null,
+			accountpassword varchar(128) not null,
+			fullname varchar(64) not null,
+			createddate timestamptz not null default(now()),
+			createdby varchar(64) not null,
+			modifieddate timestamptz default(now()),
+			modifiedby varchar(64) not null,
+			constraint pk_account_id primary key (id)
+		);
+
+		create table organization_members (
+			accountid uuid not null,
+			organizationid uuid not null,
+			accesslevel int not null,
+			constraint pk_member_userorg primary key (accountid, organizationid),
+			constraint fk_member_accounts foreign key (accountid) references organization_accounts (id),
+			constraint fk_member_organizations foreign key (organizationid) references organizations (id)
+		);
+
 
 		update schemaversion set current_version = false where major = _old_major and minor = _old_minor and revision = _old_revision and schemaname = _schemaname;
 
