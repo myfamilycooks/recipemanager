@@ -10,14 +10,14 @@ namespace BistroFiftyTwo.Server.Repositories
 
         protected async Task<NpgsqlConnection> CreateConnection()
         {
-            var connection = new NpgsqlConnection(ConfigurationService.Get("Data:Recipe:ConnectionString"));
+            var connection = new NpgsqlConnection(ConfigurationService.Get("Data:RecipeX:ConnectionString"));
             await connection.OpenAsync();
             return connection;
         }
 
         protected NpgsqlConnection CreateConnectionSynchronous()
         {
-            var connection = new NpgsqlConnection(ConfigurationService.Get("Data:Recipe:ConnectionString"));
+            var connection = new NpgsqlConnection(ConfigurationService.Get("Data:RecipeX:ConnectionString"));
             connection.Open();
             return connection;
         }

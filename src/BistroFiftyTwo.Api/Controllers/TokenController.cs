@@ -37,6 +37,7 @@ namespace BistroFiftyTwo.Api.Controllers
 
             var claims = new[]
             {
+                new Claim("b52accountName", account.UserLogin), 
                 new Claim(JwtRegisteredClaimNames.Sub, account.UserLogin),
                 new Claim(JwtRegisteredClaimNames.Sid, account.ID.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

@@ -31,7 +31,9 @@ begin
 		alter table organization_accounts add passwordformat int not null default(1);
 		alter table organization_accounts add salt varchar(64) default('metallica');
 		alter table organization_accounts add email varchar(128) not null default('noemail@anonymous.org');
-
+		alter table organization_accounts add islocked boolean not null default('FALSE');
+		alter table organization_accounts add isdisabled boolean not null default('FALSE');
+		
 		update schemaversion set current_version = false where major = _old_major and minor = _old_minor and revision = _old_revision and schemaname = _schemaname;
 
 		insert into schemaversion

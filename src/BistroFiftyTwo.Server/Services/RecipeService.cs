@@ -13,22 +13,23 @@ namespace BistroFiftyTwo.Server.Services
     public class RecipeService : IRecipeService
     {
         public RecipeService(IRecipeRepository recipeRepository, IRecipeIngredientRepository recipeIngredientRepository,
-            IStepRepository stepRepository, IRecipeHistoryRepository recipeHistoryRepository, IPrincipal principal)
+            IStepRepository stepRepository, IRecipeHistoryRepository recipeHistoryRepository, ISecurityService securityService)
         {
             RecipeRepository = recipeRepository;
             RecipeIngredientRepository = recipeIngredientRepository;
             StepRepository = stepRepository;
             RecipeHistoryRepository = recipeHistoryRepository;
             RecipeParser = new RecipeParser(new ParserConfiguration());
-            Principal = principal as ClaimsPrincipal;
+           
+            SecurityService = securityService;
         }
 
         private IRecipeRepository RecipeRepository { get; }
         private IRecipeIngredientRepository RecipeIngredientRepository { get; }
         private IStepRepository StepRepository { get; }
         private IRecipeHistoryRepository RecipeHistoryRepository { get; }
-        private IRecipeParser RecipeParser { get; }
-        private ClaimsPrincipal Principal { get; }
+        private IRecipeParser RecipeParser { get; } 
+        private ISecurityService SecurityService { get; set; }
 
         public async Task<Recipe> GetByIdAsync(Guid id)
         {
@@ -49,8 +50,8 @@ namespace BistroFiftyTwo.Server.Services
             // TODO: Extract this out to a function of its own.
             if (string.IsNullOrEmpty(recipe.CreatedBy) || string.IsNullOrEmpty(recipe.ModifiedBy))
             {
-                recipe.CreatedBy = Principal.Identity.Name;
-                recipe.ModifiedBy = Principal.Identity.Name;
+                recipe.CreatedBy = await SecurityService.GetCurrentUserName();
+                recipe.ModifiedBy = await SecurityService.GetCurrentUserName();
             }
 
             var createdRecipe = await RecipeRepository.CreateAsync(recipe);
@@ -68,8 +69,8 @@ namespace BistroFiftyTwo.Server.Services
 
                 if (string.IsNullOrEmpty(r.CreatedBy) || string.IsNullOrEmpty(r.ModifiedBy))
                 {
-                    r.CreatedBy = Principal.Identity.Name;
-                    r.ModifiedBy = Principal.Identity.Name;
+                    r.CreatedBy = await SecurityService.GetCurrentUserName();
+                    r.ModifiedBy = await SecurityService.GetCurrentUserName();
                 }
 
                 await RecipeIngredientRepository.CreateAsync(r);
@@ -81,8 +82,8 @@ namespace BistroFiftyTwo.Server.Services
 
                 if (string.IsNullOrEmpty(s.CreatedBy) || string.IsNullOrEmpty(s.ModifiedBy))
                 {
-                    s.CreatedBy = Principal.Identity.Name;
-                    s.ModifiedBy = Principal.Identity.Name;
+                    s.CreatedBy = await SecurityService.GetCurrentUserName();
+                    s.ModifiedBy = await SecurityService.GetCurrentUserName();
                 }
 
                 await StepRepository.CreateAsync(s);
@@ -110,19 +111,19 @@ namespace BistroFiftyTwo.Server.Services
 
         public async Task<Recipe> ParseAsync(string input)
         {
-            return await Task.Run(() => { return Parse(input); });
+            return await  Parse(input); 
         }
 
 
-        public Recipe Parse(string input)
+        public  async Task<Recipe> Parse(string input)
         {
             var parseOutput = RecipeParser.Parse(input);
 
             var recipeHistory = new RecipeHistory
             {
                 FullText = input,
-                CreatedBy = Principal.Identity.Name,
-                ModifiedBy = Principal.Identity.Name,
+                CreatedBy = await SecurityService.GetCurrentUserName(),
+                ModifiedBy = await SecurityService.GetCurrentUserName(),
                 Version = 1
             };
 
@@ -132,14 +133,14 @@ namespace BistroFiftyTwo.Server.Services
             return parseOutput.Output;
         }
 
-        public ParserResult ParseFull(string input)
+        public async Task<ParserResult> ParseFull(string input)
         {
             var output = RecipeParser.Parse(input);
             var recipeHistory = new RecipeHistory
             {
                 FullText = input,
-                CreatedBy = Principal.Identity.Name,
-                ModifiedBy = Principal.Identity.Name,
+                CreatedBy = await SecurityService.GetCurrentUserName(),
+                ModifiedBy = await SecurityService.GetCurrentUserName(),
                 Version = 1
             };
 

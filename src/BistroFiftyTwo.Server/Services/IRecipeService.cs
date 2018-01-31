@@ -11,7 +11,7 @@ namespace BistroFiftyTwo.Server.Services
         Task<Recipe> GetByKeyAsync(string key);
         Task<Recipe> ParseAsync(string input);
         Task<Recipe> CreateAsync(Recipe recipe);
-        Recipe Parse(string input);
-        ParserResult ParseFull(string input);
+        Task<Recipe> Parse(string input);
+        Task<ParserResult> ParseFull(string input);
     }
 }

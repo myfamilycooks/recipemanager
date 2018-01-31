@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
@@ -9,6 +10,7 @@ using BistroFiftyTwo.Server;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -31,7 +33,12 @@ namespace BistroFiftyTwo.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
             services.AddMvc();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", cb => cb.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(jwtBearerOptions =>
             {
@@ -46,6 +53,10 @@ namespace BistroFiftyTwo.Api
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SigningKey"]))
                 };
             });
+
+            
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IPrincipal>(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
@@ -66,6 +77,7 @@ namespace BistroFiftyTwo.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseMvc();
         }
