@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BistroFiftyTwo.Server", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BistroFiftyTwo.Tests", "test\BistroFiftyTwo.Tests\BistroFiftyTwo.Tests.csproj", "{C0D04FB3-16F2-4BDB-8BD4-ED55BF7EA85E}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{1382BE21-F350-48DB-AB79-5192D0C2CFD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BistroFiftyTwo.Api", "src\BistroFiftyTwo.Api\BistroFiftyTwo.Api.csproj", "{A5F932FB-7C51-4580-8A01-A3BFB4B57C1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BistroFiftyTwo.Api", "src\BistroFiftyTwo.Api\BistroFiftyTwo.Api.csproj", "{A5F932FB-7C51-4580-8A01-A3BFB4B57C1E}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{0A9C4848-829A-4E8E-8D88-A559C35F4210}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,14 +30,14 @@ Global
 		{C0D04FB3-16F2-4BDB-8BD4-ED55BF7EA85E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0D04FB3-16F2-4BDB-8BD4-ED55BF7EA85E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0D04FB3-16F2-4BDB-8BD4-ED55BF7EA85E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1382BE21-F350-48DB-AB79-5192D0C2CFD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1382BE21-F350-48DB-AB79-5192D0C2CFD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1382BE21-F350-48DB-AB79-5192D0C2CFD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1382BE21-F350-48DB-AB79-5192D0C2CFD6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A5F932FB-7C51-4580-8A01-A3BFB4B57C1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A5F932FB-7C51-4580-8A01-A3BFB4B57C1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5F932FB-7C51-4580-8A01-A3BFB4B57C1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5F932FB-7C51-4580-8A01-A3BFB4B57C1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A9C4848-829A-4E8E-8D88-A559C35F4210}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A9C4848-829A-4E8E-8D88-A559C35F4210}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A9C4848-829A-4E8E-8D88-A559C35F4210}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A9C4848-829A-4E8E-8D88-A559C35F4210}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.0</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>1382be21-f350-48db-ab79-5192d0c2cfd6</ProjectGuid>
+    <ProjectGuid>0a9c4848-829a-4e8e-8d88-a559c35f4210</ProjectGuid>
     <DockerLaunchBrowser>True</DockerLaunchBrowser>
     <DockerServiceUrl>http://localhost:{ServicePort}/api/values</DockerServiceUrl>
     <DockerServiceName>bistrofiftytwo.api</DockerServiceName>
