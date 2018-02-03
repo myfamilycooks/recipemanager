@@ -14,5 +14,6 @@ namespace BistroFiftyTwo.Server.Services
         Task<AccountRole> GrantUserRole(Guid userid, Guid roleid);
         Task RevokeRoleFromUser(Guid userid, Guid roleid);
         Task<RoleDefinition> UpdateRole(RoleDefinition role);
+        Task GrantDefaultRoles(Guid userAccountId);
     }
 }

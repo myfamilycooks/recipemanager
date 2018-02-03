@@ -5,10 +5,7 @@ using System.Reflection;
 
 namespace BistroFiftyTwo.Server.Entities
 {
-    public class NewUserAccount : UserAccount
-    {
-        public string InvititationCode { get; set; }
-    }
+   
     public class UserAccount : IBistroEntity
     {
         public string UserLogin { get; set; }
@@ -38,4 +35,34 @@ namespace BistroFiftyTwo.Server.Entities
                 .Select(p => p.Name).ToList();
         }
     }
+
+    public class Organization : IBistroEntity
+    {
+        public Guid ID { get; set; }
+        public string Name { get; set; }
+        public int Type { get; set; }
+        public string Owner { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string ModifiedBy { get; set; }
+        public string TableName()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<string> Columns()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class OrganizationMember  
+    {
+        public Guid OrganizationId { get; set; }
+        public Guid AccountId { get; set; }
+        public int AccessLevel { get; set; }
+    }
+
+
 }

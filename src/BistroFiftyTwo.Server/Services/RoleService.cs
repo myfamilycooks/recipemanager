@@ -76,5 +76,13 @@ namespace BistroFiftyTwo.Server.Services
         {
             await AccountRoleRepository.DeleteAsync(new AccountRole {AccountID = userid, RoleID = roleid});
         }
+
+        public async Task GrantDefaultRoles(Guid userAccountId)
+        {
+            var roles = await RoleDefinitionRepository.GetAllAsync();
+            var defaultRole = roles.FirstOrDefault(r => r.Name == "authenticated");
+
+            await GrantUserRole(userAccountId, defaultRole.ID);
+        }
     }
 }

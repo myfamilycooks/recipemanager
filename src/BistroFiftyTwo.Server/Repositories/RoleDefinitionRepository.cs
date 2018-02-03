@@ -12,7 +12,7 @@ namespace BistroFiftyTwo.Server.Repositories
     {
         public RoleDefinitionRepository(IConfigurationService configurationService)
         {
-            Connection = new NpgsqlConnection(configurationService.Get("Data:IdentityConnection:ConnectionString"));
+            Connection = new NpgsqlConnection(configurationService.Get("Data:RecipeX:ConnectionString"));
             Connection.Open();
         }
 
