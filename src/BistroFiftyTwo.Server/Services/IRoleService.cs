@@ -9,9 +9,9 @@ namespace BistroFiftyTwo.Server.Services
     {
         Task<RoleDefinition> CreateRole(RoleDefinition role);
         Task<RoleDefinition> GetRoleDefinition(Guid id);
-        Task<List<UserRole>> GetRoleMembers(Guid roleId);
+        Task<List<AccountRole>> GetRoleMembers(Guid roleId);
         Task<List<RoleDefinition>> GetUserRoles(Guid userId);
-        Task<UserRole> GrantUserRole(Guid userid, Guid roleid);
+        Task<AccountRole> GrantUserRole(Guid userid, Guid roleid);
         Task RevokeRoleFromUser(Guid userid, Guid roleid);
         Task<RoleDefinition> UpdateRole(RoleDefinition role);
     }
