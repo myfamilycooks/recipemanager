@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  bistrofiftytwo.api:
+    image: bistrofiftytwo.api
+    build:
+      context: ./src/BistroFiftyTwo.Api
+      dockerfile: Dockerfile

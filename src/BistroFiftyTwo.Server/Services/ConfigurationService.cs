@@ -4,16 +4,16 @@ namespace BistroFiftyTwo.Server.Services
 {
     public class ConfigurationService : IConfigurationService
     {
-        public ConfigurationService(IConfigurationRoot root)
+        public ConfigurationService(IConfiguration config) 
         {
-            ConfigurationRoot = root;
+            Configuration = config;
         }
 
-        protected IConfigurationRoot ConfigurationRoot { get; set; }
+        protected IConfiguration Configuration { get; set; }
 
         public string Get(string key)
         {
-            return ConfigurationRoot[key];
+            return Configuration[key];
         }
     }
 }

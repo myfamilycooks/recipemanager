@@ -26,7 +26,7 @@ namespace BistroFiftyTwo.Server.Services
         {
             var salt = EncryptionService.GenerateSalt();
             item.Salt = salt;
-            item.Password = EncryptionService.SlowOneWayHash(item.Password, salt);
+            item.AccountPassword = EncryptionService.SlowOneWayHash(item.AccountPassword, salt);
             item.PasswordFormat = (int) PasswordFormat.Hashed;
             item.CreatedBy = "chef";
             item.CreatedDate = DateTime.UtcNow;
@@ -64,7 +64,7 @@ namespace BistroFiftyTwo.Server.Services
         public async Task<UserAccount> Update(UserAccount item)
         {
             var originalAccount = await Get(item.ID);
-            item.Password = originalAccount.Password;
+            item.AccountPassword = originalAccount.AccountPassword;
             item.PasswordFormat = (int) PasswordFormat.Hashed;
 
             return await Repository.UpdateAsync(item);
@@ -75,12 +75,12 @@ namespace BistroFiftyTwo.Server.Services
             var salt = EncryptionService.GenerateSalt();
 
             if (!string.IsNullOrEmpty(newPassword))
-                item.Password = newPassword;
+                item.AccountPassword = newPassword;
             // todo launch audit event..
 
-            var encrypted = EncryptionService.SlowOneWayHash(item.Password, salt);
+            var encrypted = EncryptionService.SlowOneWayHash(item.AccountPassword, salt);
 
-            item.Password = encrypted;
+            item.AccountPassword = encrypted;
             item.Salt = salt;
             item.PasswordFormat = (int) PasswordFormat.Hashed;
 
@@ -92,12 +92,12 @@ namespace BistroFiftyTwo.Server.Services
             var userAccount = await Repository.GetByLoginAsync(login);
 
             if (userAccount.PasswordFormat != (int) PasswordFormat.Hashed)
-                if (userAccount.Password.Equals(password))
+                if (userAccount.AccountPassword.Equals(password))
                     return userAccount;
             // hash passed in pw...
             var hashedPassword = EncryptionService.SlowOneWayHash(password, userAccount.Salt);
 
-            if (userAccount.Password.Equals(hashedPassword))
+            if (userAccount.AccountPassword.Equals(hashedPassword))
                 return userAccount;
             return null;
         }

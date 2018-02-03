@@ -5,10 +5,14 @@ using System.Reflection;
 
 namespace BistroFiftyTwo.Server.Entities
 {
+    public class NewUserAccount : UserAccount
+    {
+        public string InvititationCode { get; set; }
+    }
     public class UserAccount : IBistroEntity
     {
-        public string Login { get; set; }
-        public string Password { get; set; }
+        public string UserLogin { get; set; }
+        public string AccountPassword { get; set; }
         public string Salt { get; set; }
         public int PasswordFormat { get; set; }
         public string Fullname { get; set; }

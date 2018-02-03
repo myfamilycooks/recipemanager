@@ -3,11 +3,11 @@ $$
 declare
 	_old_major integer := 1;
 	_old_minor integer := 0;
-	_old_revision integer := 3;
+	_old_revision integer := 4;
 
 	_major integer := 1;
 	_minor integer := 0;
-	_revision integer := 4;
+	_revision integer := 5;
 	_schemaname varchar := 'recipemanager';
 
 	_patch_exists integer := 0;
@@ -28,41 +28,12 @@ begin
 	if (_patch_required > 0) then
 
 
-		create table organizations (
-			id uuid not null default(uuid_generate_v4()),
-			name text not null, 
-			type int not null,
-			owner varchar(64) not null,
-			createddate timestamptz not null default(now()),
-			createdby varchar(64) not null,
-			modifieddate timestamptz default(now()),
-			modifiedby varchar(64) not null,
-			constraint pk_organizaton_id primary key (id)
-		);
+		alter table organization_accounts add passwordformat int not null default(1);
+		alter table organization_accounts add salt varchar(64) default('metallica');
+		alter table organization_accounts add email varchar(128) not null default('noemail@anonymous.org');
+		alter table organization_accounts add islocked boolean not null default('FALSE');
+		alter table organization_accounts add isdisabled boolean not null default('FALSE');
 		
-
-		create table organization_accounts (
-			id uuid not null default(uuid_generate_v4()),
-			userlogin varchar(64) not null,
-			accountpassword varchar(128) not null,
-			fullname varchar(64) not null,
-			createddate timestamptz not null default(now()),
-			createdby varchar(64) not null,
-			modifieddate timestamptz default(now()),
-			modifiedby varchar(64) not null,
-			constraint pk_account_id primary key (id)
-		);
-
-		create table organization_members (
-			accountid uuid not null,
-			organizationid uuid not null,
-			accesslevel int not null,
-			constraint pk_member_userorg primary key (accountid, organizationid),
-			constraint fk_member_accounts foreign key (accountid) references organization_accounts (id),
-			constraint fk_member_organizations foreign key (organizationid) references organizations (id)
-		);
-
-
 		update schemaversion set current_version = false where major = _old_major and minor = _old_minor and revision = _old_revision and schemaname = _schemaname;
 
 		insert into schemaversion
