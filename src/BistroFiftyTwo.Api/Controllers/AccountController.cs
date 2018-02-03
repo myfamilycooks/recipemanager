@@ -16,11 +16,13 @@ namespace BistroFiftyTwo.Api.Controllers
     public class AccountController : Controller
     {
         protected IUserAccountService UserAccountService { get; set; }
+        protected IRoleService RoleService { get; set; }
         protected IConfiguration Configuration { get;set; }
-        public AccountController(IUserAccountService userAccountService, IConfiguration configuration)
+        public AccountController(IUserAccountService userAccountService, IRoleService roleService, IConfiguration configuration)
         {
             UserAccountService = userAccountService;
             Configuration = configuration;
+            RoleService = roleService;
         }
 
         [AllowAnonymous, Route("new"), HttpPost]
@@ -49,6 +51,9 @@ namespace BistroFiftyTwo.Api.Controllers
                 };
                 
                 var userAccount = await UserAccountService.Create(newUserAccount);
+
+                await RoleService.GrantDefaultRoles(userAccount.ID);
+
                 return Created($"api/accounts/{userAccount.ID}", userAccount);
             }
 

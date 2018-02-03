@@ -9,16 +9,16 @@ namespace BistroFiftyTwo.Server.Services
 {
     public class RoleService : IRoleService
     {
-        public RoleService(IRoleDefinitionRepository roleDefinitionRepository, IUserRoleRepository userRoleRepository,
+        public RoleService(IRoleDefinitionRepository roleDefinitionRepository, IAccountRoleRepository accountRoleRepository,
             IUserAccountService userAccountService)
         {
             RoleDefinitionRepository = roleDefinitionRepository;
-            UserRoleRepository = userRoleRepository;
+            AccountRoleRepository = accountRoleRepository;
             UserAccountService = userAccountService;
         }
 
         protected IRoleDefinitionRepository RoleDefinitionRepository { get; set; }
-        protected IUserRoleRepository UserRoleRepository { get; set; }
+        protected IAccountRoleRepository AccountRoleRepository { get; set; }
         protected IUserAccountService UserAccountService { get; set; }
 
         public async Task<RoleDefinition> GetRoleDefinition(Guid id)
@@ -28,7 +28,7 @@ namespace BistroFiftyTwo.Server.Services
 
         public async Task<List<RoleDefinition>> GetUserRoles(Guid userId)
         {
-            var userRoles = await UserRoleRepository.GetByUserIDAsync(userId);
+            var userRoles = await AccountRoleRepository.GetByAccountIdAsync(userId);
             var taskList = new List<Task<RoleDefinition>>();
             userRoles.ToList().ForEach(x => { taskList.Add(GetRoleDefinition(x.RoleID)); });
 
@@ -36,10 +36,10 @@ namespace BistroFiftyTwo.Server.Services
             return rolesForUser.ToList();
         }
 
-        public async Task<List<UserRole>> GetRoleMembers(Guid roleId)
+        public async Task<List<AccountRole>> GetRoleMembers(Guid roleId)
         {
             ///TODO: Add Caching.
-            var users = await UserRoleRepository.GetByRoleIDAsync(roleId);
+            var users = await AccountRoleRepository.GetByRoleIDAsync(roleId);
             return users.ToList();
         }
 
@@ -53,29 +53,36 @@ namespace BistroFiftyTwo.Server.Services
             return await RoleDefinitionRepository.UpdateAsync(role);
         }
 
-        public async Task<UserRole> GrantUserRole(Guid userid, Guid roleid)
+        public async Task<AccountRole> GrantUserRole(Guid userid, Guid roleid)
         {
-            var userRole = await UserRoleRepository.GetUserRoleAsync(userid, roleid);
+            var userRole = await AccountRoleRepository.GetUserRoleAsync(userid, roleid);
 
             if (userRole != null)
                 return userRole;
-            userRole = new UserRole
+            userRole = new AccountRole
             {
-                UserID = userid,
+                AccountID = userid,
                 RoleID = roleid,
-                IsDisabled = false,
                 CreatedBy = "chef",
                 ModifiedBy = "chef",
                 ModifiedDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow
             };
 
-            return await UserRoleRepository.CreateAsync(userRole);
+            return await AccountRoleRepository.CreateAsync(userRole);
         }
 
         public async Task RevokeRoleFromUser(Guid userid, Guid roleid)
         {
-            await UserRoleRepository.DeleteAsync(new UserRole {UserID = userid, RoleID = roleid});
+            await AccountRoleRepository.DeleteAsync(new AccountRole {AccountID = userid, RoleID = roleid});
+        }
+
+        public async Task GrantDefaultRoles(Guid userAccountId)
+        {
+            var roles = await RoleDefinitionRepository.GetAllAsync();
+            var defaultRole = roles.FirstOrDefault(r => r.Name == "authenticated");
+
+            await GrantUserRole(userAccountId, defaultRole.ID);
         }
     }
 }

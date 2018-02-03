@@ -18,12 +18,14 @@ namespace BistroFiftyTwo.Api.Controllers
     public class TokenController : Controller
     {
         protected IUserAccountService UserAccountService { get; set; }
+        protected IRoleService RoleService { get; set; }
         protected IConfiguration Configuration { get; set; }
 
-        public TokenController(IUserAccountService userAccountService, IConfiguration configuration)
+        public TokenController(IUserAccountService userAccountService, IRoleService roleService, IConfiguration configuration)
         {
             UserAccountService = userAccountService;
             Configuration = configuration;
+            RoleService = roleService;
         }
 
         [AllowAnonymous, Route("token"), HttpPost]
@@ -35,13 +37,21 @@ namespace BistroFiftyTwo.Api.Controllers
 
             if (account == null) return Unauthorized();
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim("b52accountName", account.UserLogin), 
                 new Claim(JwtRegisteredClaimNames.Sub, account.UserLogin),
                 new Claim(JwtRegisteredClaimNames.Sid, account.ID.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
+
+            var roles = await RoleService.GetUserRoles(account.ID);
+
+            roles.ForEach(r =>
+            {
+                claims.Add(new Claim(r.Name, r.ID.ToString()));
+            });
+
 
             var token = new JwtSecurityToken
             (
