@@ -30,7 +30,10 @@ namespace BistroFiftyTwo.Api.Controllers
             var id = claimsUser.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sid).Value;
             var actualUser = await UserAccountService.Get(Guid.Parse(id));
 
-            return Ok(new { user = actualUser, claims = claimsUser});
+            var claimsList = (from c in claimsUser.Claims
+                select new KeyValuePair<string, string>(c.Type, c.Value)).ToList();
+
+            return Ok(new { user = actualUser, claims = claimsList });
         }
 
         [Route("Secure"), HttpGet]

@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace BistroFiftyTwo.Api
 {
@@ -35,6 +36,18 @@ namespace BistroFiftyTwo.Api
         {
             services.AddMemoryCache();
             services.AddMvc();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Version = "v1", Title = "My Family Cooks API", });
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                {
+                    Description =
+                        "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+            });
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", cb => cb.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
@@ -80,6 +93,11 @@ namespace BistroFiftyTwo.Api
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Family Cooks API V1");
+            });
         }
     }
 }

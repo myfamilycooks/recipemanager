@@ -16,7 +16,7 @@ namespace BistroFiftyTwo.Api.Controllers
         private IRecipeService RecipeService { get; set; }
         public RecipeController(IRecipeService recipeService) { RecipeService = recipeService; }
 
-        [Authorize, Route("{id:guid}")]
+        [Authorize, Route("{id:guid}"), HttpGet]
         public async Task<IActionResult> GetById(Guid id)
         {
             try
@@ -30,7 +30,7 @@ namespace BistroFiftyTwo.Api.Controllers
             }
         }
 
-        [Authorize, Route("{key}")]
+        [Authorize, Route("{key}"), HttpGet]
         public async Task<IActionResult> GetByKey(string key)
         {
             try
