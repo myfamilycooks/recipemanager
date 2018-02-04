@@ -9,11 +9,6 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace BistroFiftyTwo.Server.Services
 {
-    public interface ISecurityService
-    {
-        Task<UserAccount> GetCurrentUser();
-        Task<string> GetCurrentUserName();
-    }
     public class SecurityService : ISecurityService
     {
         protected IPrincipal Principal { get; set; }
