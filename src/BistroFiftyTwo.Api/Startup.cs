@@ -66,8 +66,11 @@ namespace BistroFiftyTwo.Api
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SigningKey"]))
                 };
             });
+            services.AddDistributedRedisCache(options =>
+            {
+                options.Configuration = Configuration["Caching:RedisAddress"];
+            });
 
-            
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IPrincipal>(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User);
 

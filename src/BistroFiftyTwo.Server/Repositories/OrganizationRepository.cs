@@ -78,7 +78,7 @@ namespace BistroFiftyTwo.Server.Repositories
 
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleOrDefaultAsync("select * from organizations where urlkey = @urlkey",
+                return await connection.QuerySingleOrDefaultAsync<Organization>("select * from organizations where urlkey = @urlkey",
         new { urlkey = urlKey });
             }
 

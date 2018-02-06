@@ -3,11 +3,11 @@ $$
 declare
 	_old_major integer := 1;
 	_old_minor integer := 0;
-	_old_revision integer := 7;
+	_old_revision integer := 8;
 
 	_major integer := 1;
 	_minor integer := 0;
-	_revision integer := 8;
+	_revision integer := 9;
 	_schemaname varchar := 'recipemanager';
 
 	_patch_exists integer := 0;
@@ -27,11 +27,24 @@ begin
 
 	if (_patch_required > 0) then
 
-		alter table organizations add description text not null default('description tbd');
-        alter table organizations add urlkey varchar(64) not null;
-        alter table organizations rename type to orgtype;
-        
-        create unique index unq_organizations_urlkey on organizations (urlkey);
+        ----------------------------------------------------------------------------------------
+        -- All Changes beneath this line 
+        ----------------------------------------------------------------------------------------
+
+        alter table organization_members add id uuid not null default(uuid_generate_v4());
+        alter table organization_members add membershipstatus int not null default(0);
+        alter table organization_members add createddate timestamptz not null default(now());
+        alter table organization_members add createdby varchar(64) not null;
+        alter table organization_members add modifieddate timestamptz not null default(now());
+        alter table organization_members add modifiedby varchar(64) not null;
+
+        alter table organization_members drop CONSTRAINT pk_member_userorg;
+        alter table organization_members add constraint pk_member_id primary key (id);
+        create unique index unq_members_accountorg on organization_members (accountid, organizationid);
+
+        ----------------------------------------------------------------------------------------
+        -- All Changes above this line 
+        ----------------------------------------------------------------------------------------
 
 		update schemaversion set current_version = false where major = _old_major and minor = _old_minor and revision = _old_revision and schemaname = _schemaname;
 

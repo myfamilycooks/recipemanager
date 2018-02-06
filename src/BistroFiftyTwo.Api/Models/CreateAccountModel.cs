@@ -22,4 +22,17 @@ namespace BistroFiftyTwo.Api.Models
         [Required] public string Description { get; set; }
         [Required] public string UrlKey { get; set; }
     }
+
+    public class AddOrganizationMemberModel
+    {
+        [Required] public string Reason { get; set; }
+        [Required] public Guid AccountId { get; set; }
+    }
+
+    public class UpdateMemberModel
+    {
+        [Required] public Guid AccountId { get; set; }
+        [Required] public int MembershipStatus { get; set; }
+        [Required] public int AccessLevel { get; set; }
+    }
 }
