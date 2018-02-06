@@ -17,7 +17,7 @@ namespace BistroFiftyTwo.Api.Controllers
         {
             RecipeIngredientRepository = recipeIngredientRepository;
         }
-        [Route("")]
+        [Route(""), HttpGet]
         public async Task<IActionResult> Get()
         {
             try
