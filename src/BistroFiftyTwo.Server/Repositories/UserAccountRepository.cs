@@ -9,16 +9,13 @@ using Npgsql;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
-    public class UserAccountRepository : IUserAccountRepository
+    public class UserAccountRepository : BaseRepository,  IUserAccountRepository
     {
         public UserAccountRepository(IConfigurationService configurationService)
         {
-            Connection = new NpgsqlConnection();
-            Connection.ConnectionString = configurationService.Get("Data:RecipeX:ConnectionString");
-            Connection.Open();
+            ConfigurationService = configurationService;
         }
-
-        protected NpgsqlConnection Connection { get; set; }
+ 
 
         public async Task<UserAccount> CreateAsync(UserAccount item)
         {
@@ -40,35 +37,56 @@ namespace BistroFiftyTwo.Server.Repositories
                 passwordformat = item.PasswordFormat
             };
 
-            return await Connection.QuerySingleAsync<UserAccount>(query, values);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<UserAccount>(query, values);
+            }
         }
 
         public async Task DeleteAsync(UserAccount item)
         {
-            await Connection.ExecuteAsync("delete from organization_accounts where id = @id", new {id = item.ID});
+            using (var connection = await CreateConnection())
+            {
+                await connection.ExecuteAsync("delete from organization_accounts where id = @id", new { id = item.ID });
+            }
+
+           
         }
 
         public async Task<UserAccount> GetAsync(Guid id)
         {
-            return await Connection.QuerySingleAsync<UserAccount>("select * from organization_accounts where id = @id",
-                new {id});
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<UserAccount>("select * from organization_accounts where id = @id",
+    new { id });
+            }
+
         }
 
         public async Task<IEnumerable<UserAccount>> GetAllAsync()
         {
-            return await Connection.QueryAsync<UserAccount>("select * from organization_accounts");
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QueryAsync<UserAccount>("select * from organization_accounts ");
+            }
         }
 
         public async Task<UserAccount> GetByEmailAsync(string email)
         {
-            return await Connection.QuerySingleAsync<UserAccount>("select * from organization_accounts where id = @email",
-                new {email});
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<UserAccount>("select * from organization_accounts where email = @email",
+    new { email });
+            }
         }
 
         public async Task<UserAccount> GetByLoginAsync(string login)
         {
-            return await Connection.QuerySingleAsync<UserAccount>("select * from organization_accounts where userlogin = @login",
-                new {login});
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<UserAccount>("select * from organization_accounts where userlogin = @login",
+                new { login });
+            }
         }
 
         public async Task<UserAccount> UpdateAsync(UserAccount item)
@@ -102,15 +120,16 @@ namespace BistroFiftyTwo.Server.Repositories
                 id = item.ID
             };
 
-            return await Connection.QuerySingleAsync<UserAccount>(query, values);
+            using (var connection = await CreateConnection())
+            {
+            return await connection.QuerySingleAsync<UserAccount>(query, values);
+
+            }
         }
 
         public void Dispose()
         {
-            if (Connection.State != ConnectionState.Closed)
-                Connection.Close();
-
-            Connection.Dispose();
+   
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
@@ -8,12 +9,11 @@ using Npgsql;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
-    public class RoleDefinitionRepository : IRoleDefinitionRepository
+    public class RoleDefinitionRepository : BaseRepository, IRoleDefinitionRepository
     {
         public RoleDefinitionRepository(IConfigurationService configurationService)
         {
-            Connection = new NpgsqlConnection(configurationService.Get("Data:RecipeX:ConnectionString"));
-            Connection.Open();
+            ConfigurationService = configurationService;
         }
 
         protected NpgsqlConnection Connection { get; set; }
@@ -32,30 +32,38 @@ namespace BistroFiftyTwo.Server.Repositories
                 modifiedby = item.ModifiedBy
             };
 
+            using(var connection = await CreateConnection()) { 
             return await Connection.QuerySingleAsync<RoleDefinition>(query, row);
+            }
         }
 
         public async Task DeleteAsync(RoleDefinition item)
         {
-            await Connection.ExecuteAsync("delete from role_definitions where id = @id", new {id = item.ID});
+            using(var connection = await CreateConnection()) { 
+                await connection.ExecuteAsync("delete from role_definitions where id = @id", new {id = item.ID});
+            }
         }
 
         public void Dispose()
         {
-            Connection.Close();
-            Connection.Dispose();
+
         }
 
         public async Task<RoleDefinition> GetAsync(Guid id)
         {
+            using(var connection = await CreateConnection()) { 
             return
-                await Connection.QuerySingleOrDefaultAsync<RoleDefinition>(
+                await connection.QuerySingleOrDefaultAsync<RoleDefinition>(
                     "select * from role_definitions where id = @id", new {id});
+            }
         }
 
         public async Task<IEnumerable<RoleDefinition>> GetAllAsync()
         {
-            return await Connection.QueryAsync<RoleDefinition>("select * from role_definitions");
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QueryAsync<RoleDefinition>("select * from role_definitions");
+            }
         }
 
         public async Task<RoleDefinition> UpdateAsync(RoleDefinition item)
@@ -74,7 +82,10 @@ namespace BistroFiftyTwo.Server.Repositories
                 modifieddate = item.ModifiedDate
             };
 
-            return await Connection.QuerySingleAsync<RoleDefinition>(query, row);
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<RoleDefinition>(query, row);
+            }
         }
     }
 }
