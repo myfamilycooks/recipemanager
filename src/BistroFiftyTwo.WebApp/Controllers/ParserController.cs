@@ -22,7 +22,7 @@ namespace BistroFiftyTwo.WebApp.Controllers
         public async Task<IActionResult> ParseStandardRecipe()
         {
             var input = await new StreamReader(Request.Body).ReadToEndAsync();
-            var parsedRecipe = RecipeService.ParseFull(input);
+            var parsedRecipe = await RecipeService.ParseFull(input);
             return Ok(parsedRecipe);
         }
 

@@ -5,10 +5,21 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="autofac" Version="4.6.0" />
-    <PackageReference Include="dapper" Version="1.50.2" /> 
+    <PackageReference Include="dapper.contrib" Version="1.50.4" /> 
     <PackageReference Include="microsoft.aspnetcore.cryptography.keyderivation" Version="1.1.2" />
     <PackageReference Include="microsoft.extensions.configuration" Version="1.1.2" />
     <PackageReference Include="npgsql" Version="3.2.2" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Caching.Abstractions">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.caching.abstractions\2.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\..\Users\Scott Sargent\.nuget\packages\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\system.identitymodel.tokens.jwt\5.1.4\lib\netstandard1.4\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

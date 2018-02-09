@@ -5,12 +5,10 @@ using System.Reflection;
 
 namespace BistroFiftyTwo.Server.Entities
 {
-    public class UserRole
+    public class AccountRole
     {
-        public Guid UserID { get; set; }
+        public Guid AccountID { get; set; }
         public Guid RoleID { get; set; }
-        public bool IsDisabled { get; set; }
-        public DateTime EffectiveEndDate { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
@@ -18,7 +16,7 @@ namespace BistroFiftyTwo.Server.Entities
 
         public string TableName()
         {
-            return "user_roles";
+            return "account_roles";
         }
 
         public List<string> Columns()
