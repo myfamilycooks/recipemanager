@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { Route } from "react-router-dom";
+import Menu from './components/menu';
 import './App.css';
+import Debug from "./pages/debug";
+import About from "./pages/about";
+import Editor from "./pages/editor";
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Menu />
+       <div>
+         <Route path="/editor" component={Editor} />
+         <Route path="/debug" component={Debug} />
+         <Route path="/about" component={About} />
+       </div>
       </div>
     );
   }
