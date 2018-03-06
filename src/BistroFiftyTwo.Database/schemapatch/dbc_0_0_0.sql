@@ -1,3 +1,5 @@
+create extension "uuid-ossp";
+
 create or replace function dbc_0_0_0() returns void as
 $$
 BEGIN
