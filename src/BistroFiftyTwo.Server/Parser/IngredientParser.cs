@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using BistroFiftyTwo.Server.Entities;
@@ -8,7 +9,7 @@ namespace BistroFiftyTwo.Server.Parser
     public class IngredientParser
     {
         private static readonly Regex QuantityRegex = new Regex(@"[0-9]+(\/[0-9]+)?", RegexOptions.Compiled);
-
+        private static readonly Regex MalformattedQuantityRegex = new Regex(@"(?<quant>\d+)(?<unit>[^\d]+)", RegexOptions.Compiled);
         public IngredientParser(ParserConfiguration config)
         {
             Configuration = config;
@@ -18,22 +19,30 @@ namespace BistroFiftyTwo.Server.Parser
 
         public RecipeIngredient Parse(string ingredientText)
         {
-            var recipeIngredient = new RecipeIngredient();
-            /*
-             *  1 cup diced onions
-            */
-            // drop the noise words.
-            Configuration.NoiseWords.ForEach(n => ingredientText = ingredientText.Replace(n, ""));
+            try
+            {
 
-            var ingredientTokens = Lexer.Tokenize(ingredientText);
+                var recipeIngredient = new RecipeIngredient();
+                /*
+                 *  1 cup diced onions
+                */
+                // drop the noise words.
+                Configuration.NoiseWords.ForEach(n => ingredientText = ingredientText.Replace(n, ""));
 
-            recipeIngredient = ParseQuantity(recipeIngredient, ref ingredientTokens);
-            recipeIngredient = ParseUnits(recipeIngredient, ref ingredientTokens);
-            recipeIngredient = ParseItemQualifiers(recipeIngredient, ref ingredientTokens);
-            recipeIngredient = ParseItem(recipeIngredient, ref ingredientTokens);
-            recipeIngredient = ParseNotes(recipeIngredient, ref ingredientTokens);
+                var ingredientTokens = Lexer.Tokenize(ingredientText);
 
-            return recipeIngredient;
+                recipeIngredient = ParseQuantity(recipeIngredient, ref ingredientTokens);
+                recipeIngredient = ParseUnits(recipeIngredient, ref ingredientTokens);
+                recipeIngredient = ParseItemQualifiers(recipeIngredient, ref ingredientTokens);
+                recipeIngredient = ParseItem(recipeIngredient, ref ingredientTokens);
+                recipeIngredient = ParseNotes(recipeIngredient, ref ingredientTokens);
+
+                return recipeIngredient;
+            }
+            catch (Exception ex)
+            {
+                throw new RecipeParseException("Invalid Ingredient Format", ex);
+            }
         }
 
         private RecipeIngredient ParseItemQualifiers(RecipeIngredient recipeIngredient, ref Token ingredientTokens)
@@ -114,10 +123,28 @@ namespace BistroFiftyTwo.Server.Parser
                 }
                 else
                 {
+                    if (MalformattedQuantityRegex.IsMatch(ingredientTokens.Value))
+                    {
+                        var match = MalformattedQuantityRegex.Match(ingredientTokens.Value);
+
+                        var quantity = match.Groups["quant"].Value;
+                        var unit = match.Groups["unit"].Value;
+
+                        var original = match.Value;
+
+                        ingredientTokens.Value = ingredientTokens.Value.Replace(original, $"{quantity} {unit}");
+                    }
+
+
                     if (ingredientTokens.Value.Contains('/'))
                         recipeIngredient.Quantity = ParseFraction(ingredientTokens.Value);
                     else
-                        recipeIngredient.Quantity = double.Parse(ingredientTokens.Value);
+                    {
+                        var quant = 0d;
+                        if(double.TryParse(ingredientTokens.Value, out quant))
+                            recipeIngredient.Quantity = quant;
+                        
+                    }
 
                     ingredientTokens = ingredientTokens.Next;
                 }

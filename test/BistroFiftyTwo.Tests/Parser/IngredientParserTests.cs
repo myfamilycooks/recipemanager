@@ -169,5 +169,32 @@ namespace BistroFiftyTwo.Tests.Parser
             Assert.Equal(ingredient.Notes, output.Notes);
 
         }
+
+        [Fact, Trait("Ingredient Parser", "When parsing an ingredient with a complex fractional quantity and complex notes")]
+        public void When_parsing_a_complex_ingredient()
+        {
+            // Arrange
+            var inputString = "2 lbs. top round, bottom round or stew beef cut into 2 inch pieces ";
+            var recipeParserConfiguration = new ParserConfiguration() { ReportExceptions = true };
+            var ingredientParser = new IngredientParser(recipeParserConfiguration);
+            var ingredient = new RecipeIngredient()
+            {
+                Quantity = 2,
+                Units = "lbs",
+                Ingredient = "top round",
+                Notes = "top round, bottom round or stew beef cut into 2 inch pieces"
+            };
+
+            // Act 
+            var output = ingredientParser.Parse(inputString);
+
+            // Assert 
+            Assert.NotNull(output);
+            Assert.Equal(ingredient.Quantity, output.Quantity);
+            Assert.Equal(ingredient.Units, output.Units);
+            Assert.Equal(ingredient.Ingredient, output.Ingredient);
+            Assert.Equal(ingredient.Notes, output.Notes);
+
+        }
     }
 }

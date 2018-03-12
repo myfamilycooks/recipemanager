@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 using BistroFiftyTwo.Server.Entities;
@@ -156,13 +157,21 @@ namespace BistroFiftyTwo.Server.Parser
 
             scannedRecipe.IngredientSection.Content.ForEach(c =>
             {
-                var correctedIngredient = Regex.Replace(c.Trim(), @"^\d+(\)|\.)", string.Empty);
-                if (!string.IsNullOrEmpty(correctedIngredient.Trim()))
+                try
                 {
-                    var ingredient = IngredientParser.Parse(correctedIngredient);
-                    ingredient.Ordinal = ingredientOrdinal++;
-                    ingredients.Add(ingredient);
+                    var correctedIngredient = Regex.Replace(c.Trim(), @"^\d+(\)|\.)", string.Empty);
+                    if (!string.IsNullOrEmpty(correctedIngredient.Trim()))
+                    {
+                        var ingredient = IngredientParser.Parse(correctedIngredient);
+                        ingredient.Ordinal = ingredientOrdinal++;
+                        ingredients.Add(ingredient);
+                    }
                 }
+                catch (RecipeParseException ex)
+                {
+                    result.Errors.Add(ParseError.FromException(ex, c));
+                }
+               
             });
 
             result.Output.Ingredients = ingredients;
@@ -206,6 +215,25 @@ namespace BistroFiftyTwo.Server.Parser
             if (result.Errors.Any(e => e.ErrorType == ErrorType.MissingSection))
                 return false;
             return true;
+        }
+    }
+
+    internal class RecipeParseException : Exception
+    {
+        public RecipeParseException()
+        {
+        }
+
+        public RecipeParseException(string message) : base(message)
+        {
+        }
+
+        public RecipeParseException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected RecipeParseException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

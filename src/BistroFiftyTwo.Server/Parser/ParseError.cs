@@ -1,4 +1,6 @@
-﻿namespace BistroFiftyTwo.Server.Parser
+﻿using System;
+
+namespace BistroFiftyTwo.Server.Parser
 {
     public class ParseError
     {
@@ -12,6 +14,18 @@
         public override string ToString()
         {
             return $"{Line}, {Character} - {ErrorType}-{ErrorCode} {Description} in {UnparsedLine}";
+        }
+
+  
+        internal static ParseError FromException(RecipeParseException ex, string c)
+        {
+            return new ParseError()
+            {
+                ErrorType = ErrorType.Error,
+                ErrorCode = ParseErrorCode.ExceptionOccurred,
+                UnparsedLine = c,
+                Description = ex.Message
+            };
         }
     }
 }
