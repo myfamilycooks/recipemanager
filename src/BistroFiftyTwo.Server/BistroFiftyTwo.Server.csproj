@@ -5,7 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="autofac" Version="4.6.0" />
-    <PackageReference Include="dapper.contrib" Version="1.50.4" /> 
+    <PackageReference Include="dapper.contrib" Version="1.50.4" />
+    <PackageReference Include="FluentCommandLineParser" Version="1.4.3" /> 
     <PackageReference Include="microsoft.aspnetcore.cryptography.keyderivation" Version="1.1.2" /> 
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.0-preview1-final" />
     <PackageReference Include="microsoft.extensions.configuration" Version="1.1.2" />

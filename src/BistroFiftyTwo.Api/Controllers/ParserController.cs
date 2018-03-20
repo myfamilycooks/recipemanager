@@ -21,6 +21,13 @@ namespace BistroFiftyTwo.Api.Controllers
             return Ok(parsedRecipe);
         }
 
- 
+        [HttpPost, Route("simple")]
+        public async Task<IActionResult> ParseSimpleRecipe()
+        {
+            var input = await new StreamReader(Request.Body).ReadToEndAsync();
+            var parsedRecipe = await RecipeService.ParseFull(input);
+            return Ok(parsedRecipe.Output);
+        }
+
     }
 }
