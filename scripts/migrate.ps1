@@ -18,4 +18,4 @@ $uri = "postgresql://${user}:${password}@${server}/${database}"
 & psql -f "$PSScriptRoot\..\src\BistroFiftyTwo.Database\schemapatch\dbc_1_0_7.sql" $uri
 & psql -f "$PSScriptRoot\..\src\BistroFiftyTwo.Database\schemapatch\dbc_1_0_8.sql" $uri
 & psql -f "$PSScriptRoot\..\src\BistroFiftyTwo.Database\schemapatch\dbc_1_0_9.sql" $uri
-
+& psql -f "$PSScriptRoot\..\src\BistroFiftyTwo.Database\schemapatch\dbc_1_0_10.sql" $uri
