@@ -141,7 +141,7 @@ namespace BistroFiftyTwo.Server.Repositories
         {
             var sqlQuery = @"select * from recipes where id in (
                                 SELECT recipeid FROM recipe_histories rh 
-                                WHERE rh.recipeid is not null and to_tsvector(rh.fulltext) @@ to_tsquery(@query)
+                                WHERE rh.recipeid is not null and document @@ to_tsquery(@query)
                             );";
             using (var connection = await CreateConnection())
             {

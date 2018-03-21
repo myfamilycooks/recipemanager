@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -53,6 +54,10 @@ namespace BistroFiftyTwo.Server.Services
                 recipe.CreatedBy = await SecurityService.GetCurrentUserName();
                 recipe.ModifiedBy = await SecurityService.GetCurrentUserName();
             }
+
+            var existingRecipe = await RecipeRepository.GetByKeyAsync(recipe.Key);
+            if(existingRecipe != null && existingRecipe.CreatedBy == recipe.CreatedBy)
+                throw new BistroFiftyTwoDuplicateRecipeException("A recipe with that key already exists.  Edit the existing recipe instead."); //TODO: Once we have update, call update instead.
 
             var createdRecipe = await RecipeRepository.CreateAsync(recipe);
             var recipeIngredientTasks = new List<Task<RecipeIngredient>>();
@@ -128,6 +133,8 @@ namespace BistroFiftyTwo.Server.Services
             };
 
             var history = RecipeHistoryRepository.Create(recipeHistory);
+            await RecipeHistoryRepository.UpdateSearchIndex(history.ID);
+
             parseOutput.Output.FullTextReference = history.ID;
 
             return parseOutput.Output;
@@ -145,6 +152,9 @@ namespace BistroFiftyTwo.Server.Services
             };
 
             var history = RecipeHistoryRepository.Create(recipeHistory);
+
+            await RecipeHistoryRepository.UpdateSearchIndex(history.ID);
+
             output.Output.FullTextReference = history.ID;
 
             return output;
@@ -158,6 +168,25 @@ namespace BistroFiftyTwo.Server.Services
         private async Task PopulateIngredients(Recipe recipe)
         {
             recipe.Ingredients = await RecipeIngredientRepository.GetByRecipeIdAsync(recipe.ID);
+        }
+    }
+
+    public class BistroFiftyTwoDuplicateRecipeException : Exception
+    {
+        public BistroFiftyTwoDuplicateRecipeException()
+        {
+        }
+
+        public BistroFiftyTwoDuplicateRecipeException(string message) : base(message)
+        {
+        }
+
+        public BistroFiftyTwoDuplicateRecipeException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected BistroFiftyTwoDuplicateRecipeException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }

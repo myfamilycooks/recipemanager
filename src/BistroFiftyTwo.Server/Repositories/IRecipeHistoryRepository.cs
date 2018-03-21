@@ -9,5 +9,6 @@ namespace BistroFiftyTwo.Server.Repositories
     {
         Task<IEnumerable<RecipeHistory>> GetHistoryForRecipe(Guid recipeId);
         RecipeHistory Create(RecipeHistory history);
+        Task UpdateSearchIndex(Guid id);
     }
 }

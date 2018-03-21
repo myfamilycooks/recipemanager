@@ -27,7 +27,7 @@ namespace BistroFiftyTwo.Server.Repositories
         public async Task<RecipeHistory> CreateAsync(RecipeHistory item)
         {
             var query =
-                @"insert into recipe_histories (recipeid, version, fulltext, createddate, createdby, modifieddate, modifiedby) values (@recipeid, @version, @fulltext,  @createdby,   @modifiedby) returning *";
+                @"insert into recipe_histories (recipeid, version, fulltext, document,  createdby, modifiedby) values (@recipeid, @version, @fulltext, to_tsvector(@fulltext), @createdby, @modifiedby) returning *";
 
             var record = new
             {
@@ -111,6 +111,16 @@ namespace BistroFiftyTwo.Server.Repositories
             using (var connection = CreateConnectionSynchronous())
             {
                 return connection.QuerySingle<RecipeHistory>(query, record);
+            }
+        }
+
+        public async Task UpdateSearchIndex(Guid id)
+        {
+            var query = "update recipe_histories set document = to_tsvector(fulltext) where id = @id";
+
+            using (var connection = await CreateConnection())
+            {
+                await connection.ExecuteAsync(query, new { id });
             }
         }
 

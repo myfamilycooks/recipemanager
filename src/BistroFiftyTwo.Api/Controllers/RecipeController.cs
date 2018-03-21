@@ -47,16 +47,16 @@ namespace BistroFiftyTwo.Api.Controllers
         [Authorize, HttpPost]
         public async Task<IActionResult> CreateRecipe([FromBody]Recipe recipe)
         {
-            //try
-            //{
+            try
+            {
                 var createdRecipe = await RecipeService.CreateAsync(recipe);
                 return Ok(createdRecipe);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500);
-            //}
-       
+            }
+            catch (BistroFiftyTwoDuplicateRecipeException)
+            {
+                return StatusCode(409, new { Error = "A recipe with the same title has already been created by you.  Please use a different title"});
+            }
+
         }
 
     }
