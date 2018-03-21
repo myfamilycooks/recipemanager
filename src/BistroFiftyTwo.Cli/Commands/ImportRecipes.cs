@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BistroFiftyTwo.Cli.Client;
 using Fclp.Internals.Extensions;
 using Fclp.Internals.Parsing;
 
