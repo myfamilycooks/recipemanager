@@ -21,6 +21,7 @@ namespace BistroFiftyTwo.Server.Parser.Scanner
             if (lines.First() != "description" &&
                 lines.First() != "instructions" &&
                 lines.First() != "ingredients" &&
+                lines.First() != "steps" &&
                 !string.IsNullOrEmpty(lines.First().Trim()))
                 scanned.Title = lines.First();
             var currentSection = new RecipeSection();
@@ -33,6 +34,7 @@ namespace BistroFiftyTwo.Server.Parser.Scanner
                         CloseSection(scanned, "description", ref currentSection);
                         break;
                     case "instructions":
+                    case "steps":
                         CloseSection(scanned, "instructions", ref currentSection);
                         break;
                     case "ingredients":

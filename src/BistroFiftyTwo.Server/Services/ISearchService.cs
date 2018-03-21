@@ -26,7 +26,7 @@ namespace BistroFiftyTwo.Server.Services
        
         public async Task<RecipeSearchResults> SearchRecipes(RecipeQuery query)
         {
-            var recipes = await RecipeRepository.GetAllAsync();
+            var recipes = await RecipeRepository.Search(query.SearchText);
             var results = new RecipeSearchResults()
             {
                 Recipes = new List<RecipeSearchResult>()

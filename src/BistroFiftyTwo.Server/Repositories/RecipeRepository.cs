@@ -126,14 +126,27 @@ namespace BistroFiftyTwo.Server.Repositories
             // GC.SuppressFinalize(this);
         }
 
+
+        #endregion
+
         public async Task<Recipe> GetByKeyAsync(string key)
         {
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleAsync<Recipe>("select * from recipes where key = @key", new {key});
+                return await connection.QuerySingleAsync<Recipe>("select * from recipes where key = @key", new { key });
             }
         }
 
-        #endregion
+        public async Task<IEnumerable<Recipe>> Search(string query)
+        {
+            var sqlQuery = @"select * from recipes where id in (
+                                SELECT recipeid FROM recipe_histories rh 
+                                WHERE rh.recipeid is not null and to_tsvector(rh.fulltext) @@ to_tsquery(@query)
+                            );";
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QueryAsync<Recipe>(sqlQuery, new { query });
+            }
+        }  
     }
 }

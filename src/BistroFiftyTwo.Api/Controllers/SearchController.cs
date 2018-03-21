@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,10 +22,13 @@ namespace BistroFiftyTwo.Api.Controllers
         {
             return Ok(await SearchService.SearchRecipes(null));
         }
+
+        [Authorize, HttpPost("recipes")]
+        public async Task<IActionResult> Recipes([FromBody]RecipeQuery query)
+        {
+            return Ok(await SearchService.SearchRecipes(query));
+        }
     }
 
-    public class RecipeQuery
-    {
-        public string SearchText { get; set; }
-    }
+   
 }
