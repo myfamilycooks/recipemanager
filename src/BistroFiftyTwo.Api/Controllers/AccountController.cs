@@ -31,7 +31,7 @@ namespace BistroFiftyTwo.Api.Controllers
             //if (ModelState.IsValid)
             //{
                 //nts if this should go to a fluent validation thing...
-                if (String.IsNullOrEmpty(createAccount.Email)) return StatusCode(409, BistroFiftyTwoError.MissingField("email"));
+                if (String.IsNullOrEmpty(createAccount.Email)) return BadRequest(BistroFiftyTwoError.MissingField("email"));
                 if (String.IsNullOrEmpty(createAccount.FullName)) return BadRequest(BistroFiftyTwoError.MissingField("fullname"));
                 if (String.IsNullOrEmpty(createAccount.Login)) return BadRequest(BistroFiftyTwoError.MissingField("login"));
                 if (String.IsNullOrEmpty(createAccount.Password)) return BadRequest(BistroFiftyTwoError.MissingField("password"));
