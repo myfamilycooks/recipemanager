@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -168,25 +167,6 @@ namespace BistroFiftyTwo.Server.Services
         private async Task PopulateIngredients(Recipe recipe)
         {
             recipe.Ingredients = await RecipeIngredientRepository.GetByRecipeIdAsync(recipe.ID);
-        }
-    }
-
-    public class BistroFiftyTwoDuplicateRecipeException : Exception
-    {
-        public BistroFiftyTwoDuplicateRecipeException()
-        {
-        }
-
-        public BistroFiftyTwoDuplicateRecipeException(string message) : base(message)
-        {
-        }
-
-        public BistroFiftyTwoDuplicateRecipeException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        protected BistroFiftyTwoDuplicateRecipeException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
         }
     }
 }
