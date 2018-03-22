@@ -91,6 +91,26 @@ namespace BistroFiftyTwo.Server.Repositories
             }
         }
 
+        public async Task<Recipe> GetByKeyAsync(string key)
+        {
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QuerySingleAsync<Recipe>("select * from recipes where key = @key", new {key});
+            }
+        }
+
+        public async Task<IEnumerable<Recipe>> Search(string query)
+        {
+            var sqlQuery = @"select * from recipes where id in (
+                                SELECT recipeid FROM recipe_histories rh 
+                                WHERE rh.recipeid is not null and document @@ to_tsquery(@query)
+                            );";
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QueryAsync<Recipe>(sqlQuery, new {query});
+            }
+        }
+
         #region IDisposable Support
 
         private bool disposedValue; // To detect redundant calls
@@ -126,27 +146,6 @@ namespace BistroFiftyTwo.Server.Repositories
             // GC.SuppressFinalize(this);
         }
 
-
         #endregion
-
-        public async Task<Recipe> GetByKeyAsync(string key)
-        {
-            using (var connection = await CreateConnection())
-            {
-                return await connection.QuerySingleAsync<Recipe>("select * from recipes where key = @key", new { key });
-            }
-        }
-
-        public async Task<IEnumerable<Recipe>> Search(string query)
-        {
-            var sqlQuery = @"select * from recipes where id in (
-                                SELECT recipeid FROM recipe_histories rh 
-                                WHERE rh.recipeid is not null and document @@ to_tsquery(@query)
-                            );";
-            using (var connection = await CreateConnection())
-            {
-                return await connection.QueryAsync<Recipe>(sqlQuery, new { query });
-            }
-        }  
     }
 }

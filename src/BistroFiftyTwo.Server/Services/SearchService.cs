@@ -14,29 +14,27 @@ namespace BistroFiftyTwo.Server.Services
         }
 
         private IRecipeRepository RecipeRepository { get; }
-       
+
         public async Task<RecipeSearchResults> SearchRecipes(RecipeQuery query)
         {
             var recipes = await RecipeRepository.Search(query.SearchText);
-            var results = new RecipeSearchResults()
+            var results = new RecipeSearchResults
             {
                 Recipes = new List<RecipeSearchResult>()
             };
 
             recipes.ForEach(r =>
             {
-                ((List<RecipeSearchResult>)results.Recipes).Add(new RecipeSearchResult()
+                ((List<RecipeSearchResult>) results.Recipes).Add(new RecipeSearchResult
                 {
                     Id = r.ID,
                     Description = r.Description,
-                    Name =  r.Title,
+                    Name = r.Title,
                     Url = $"/api/recipe/{r.Key}"
                 });
             });
 
             return results;
         }
-
-    
     }
 }

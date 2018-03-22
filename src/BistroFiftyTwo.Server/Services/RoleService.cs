@@ -9,7 +9,8 @@ namespace BistroFiftyTwo.Server.Services
 {
     public class RoleService : IRoleService
     {
-        public RoleService(IRoleDefinitionRepository roleDefinitionRepository, IAccountRoleRepository accountRoleRepository,
+        public RoleService(IRoleDefinitionRepository roleDefinitionRepository,
+            IAccountRoleRepository accountRoleRepository,
             IUserAccountService userAccountService)
         {
             RoleDefinitionRepository = roleDefinitionRepository;

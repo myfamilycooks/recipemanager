@@ -13,11 +13,13 @@ namespace BistroFiftyTwo.Server.Services
         {
         }
 
-        public BistroFiftyTwoDuplicateRecipeException(string message, Exception innerException) : base(message, innerException)
+        public BistroFiftyTwoDuplicateRecipeException(string message, Exception innerException) : base(message,
+            innerException)
         {
         }
 
-        protected BistroFiftyTwoDuplicateRecipeException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected BistroFiftyTwoDuplicateRecipeException(SerializationInfo info, StreamingContext context) : base(info,
+            context)
         {
         }
     }

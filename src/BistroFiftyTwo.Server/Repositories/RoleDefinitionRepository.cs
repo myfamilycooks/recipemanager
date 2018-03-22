@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
@@ -32,29 +31,31 @@ namespace BistroFiftyTwo.Server.Repositories
                 modifiedby = item.ModifiedBy
             };
 
-            using(var connection = await CreateConnection()) { 
-            return await Connection.QuerySingleAsync<RoleDefinition>(query, row);
+            using (var connection = await CreateConnection())
+            {
+                return await Connection.QuerySingleAsync<RoleDefinition>(query, row);
             }
         }
 
         public async Task DeleteAsync(RoleDefinition item)
         {
-            using(var connection = await CreateConnection()) { 
+            using (var connection = await CreateConnection())
+            {
                 await connection.ExecuteAsync("delete from role_definitions where id = @id", new {id = item.ID});
             }
         }
 
         public void Dispose()
         {
-
         }
 
         public async Task<RoleDefinition> GetAsync(Guid id)
         {
-            using(var connection = await CreateConnection()) { 
-            return
-                await connection.QuerySingleOrDefaultAsync<RoleDefinition>(
-                    "select * from role_definitions where id = @id", new {id});
+            using (var connection = await CreateConnection())
+            {
+                return
+                    await connection.QuerySingleOrDefaultAsync<RoleDefinition>(
+                        "select * from role_definitions where id = @id", new {id});
             }
         }
 

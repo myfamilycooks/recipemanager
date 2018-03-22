@@ -66,7 +66,7 @@ namespace BistroFiftyTwo.Server.Repositories
 
         public async Task<AccountRole> UpdateAsync(AccountRole item)
         {
-           throw new NotSupportedException();
+            throw new NotSupportedException();
         }
 
         public async Task DeleteAsync(AccountRole item)
@@ -80,7 +80,7 @@ namespace BistroFiftyTwo.Server.Repositories
         public async Task<AccountRole> GetUserRoleAsync(Guid accountId, Guid roleId)
         {
             var query = "select * from account_roles where accountid = @accountid and roleid = @roleid";
-            var param = new { accountid = accountId, roleid = roleId};
+            var param = new {accountid = accountId, roleid = roleId};
 
             return await Connection.QuerySingleOrDefaultAsync<AccountRole>(query, param);
         }

@@ -11,13 +11,15 @@ namespace BistroFiftyTwo.Api.Controllers
     [Route("api/ingredients")]
     public class IngredientsController : Controller
     {
-        protected IRecipeIngredientRepository RecipeIngredientRepository { get; set; }
-
         public IngredientsController(IRecipeIngredientRepository recipeIngredientRepository)
         {
             RecipeIngredientRepository = recipeIngredientRepository;
         }
-        [Route(""), HttpGet]
+
+        protected IRecipeIngredientRepository RecipeIngredientRepository { get; set; }
+
+        [Route("")]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             try
@@ -30,17 +32,17 @@ namespace BistroFiftyTwo.Api.Controllers
                 {
                     var r1 = rand.Next(10);
                     var r2 = rand.NextDouble();
-                   
-                    ingredientList.Add(new Ingredient()
+
+                    ingredientList.Add(new Ingredient
                     {
                         Id = GenerateId(),
                         Name = ingredient.Ingredient,
                         Description = $"{ingredient.Ingredient}",
-                        Price = Math.Round((decimal)r1 * (decimal)r2, 2)
+                        Price = Math.Round(r1 * (decimal) r2, 2)
                     });
                 }
 
-                return Ok(new { rows = ingredientList});
+                return Ok(new {rows = ingredientList});
             }
             catch (Exception ex)
             {
@@ -51,10 +53,8 @@ namespace BistroFiftyTwo.Api.Controllers
         private string GenerateId()
         {
             long i = 1;
-            foreach (byte b in Guid.NewGuid().ToByteArray())
-            {
-                i *= ((int)b + 1);
-            }
+            foreach (var b in Guid.NewGuid().ToByteArray())
+                i *= b + 1;
             return string.Format("{0:x}", i - DateTime.Now.Ticks);
         }
     }

@@ -9,7 +9,10 @@ namespace BistroFiftyTwo.Server.Parser
     public class IngredientParser
     {
         private static readonly Regex QuantityRegex = new Regex(@"[0-9]+(\/[0-9]+)?", RegexOptions.Compiled);
-        private static readonly Regex MalformattedQuantityRegex = new Regex(@"(?<quant>\d+)(?<unit>[^\d]+)", RegexOptions.Compiled);
+
+        private static readonly Regex MalformattedQuantityRegex =
+            new Regex(@"(?<quant>\d+)(?<unit>[^\d]+)", RegexOptions.Compiled);
+
         public IngredientParser(ParserConfiguration config)
         {
             Configuration = config;
@@ -21,7 +24,6 @@ namespace BistroFiftyTwo.Server.Parser
         {
             try
             {
-
                 var recipeIngredient = new RecipeIngredient();
                 /*
                  *  1 cup diced onions
@@ -137,13 +139,14 @@ namespace BistroFiftyTwo.Server.Parser
 
 
                     if (ingredientTokens.Value.Contains('/'))
+                    {
                         recipeIngredient.Quantity = ParseFraction(ingredientTokens.Value);
+                    }
                     else
                     {
                         var quant = 0d;
-                        if(double.TryParse(ingredientTokens.Value, out quant))
+                        if (double.TryParse(ingredientTokens.Value, out quant))
                             recipeIngredient.Quantity = quant;
-                        
                     }
 
                     ingredientTokens = ingredientTokens.Next;

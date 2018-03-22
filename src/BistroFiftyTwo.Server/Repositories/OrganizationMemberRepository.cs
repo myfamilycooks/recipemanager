@@ -17,22 +17,23 @@ namespace BistroFiftyTwo.Server.Repositories
         public async Task<OrganizationMember> GetAsync(Guid id)
         {
             var query =
-               "select * from organization_members where id = @id";
+                "select * from organization_members where id = @id";
 
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleOrDefaultAsync<OrganizationMember>(query, new { id });
+                return await connection.QuerySingleOrDefaultAsync<OrganizationMember>(query, new {id});
             }
         }
 
         public async Task<OrganizationMember> GetAsync(Guid organizationId, Guid accountId)
         {
             var query =
-               "select * from organization_members where organizationid = @organizationid AND accountid = @accountid;";
+                "select * from organization_members where organizationid = @organizationid AND accountid = @accountid;";
 
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleOrDefaultAsync<OrganizationMember>(query, new { organizationid = organizationId, accountid = accountId });
+                return await connection.QuerySingleOrDefaultAsync<OrganizationMember>(query,
+                    new {organizationid = organizationId, accountid = accountId});
             }
         }
 
@@ -61,7 +62,7 @@ namespace BistroFiftyTwo.Server.Repositories
         public async Task<IEnumerable<OrganizationMember>> GetAllAsync()
         {
             var query =
-               "select * from organization_members";
+                "select * from organization_members";
 
             using (var connection = await CreateConnection())
             {
@@ -91,11 +92,11 @@ namespace BistroFiftyTwo.Server.Repositories
         public async Task DeleteAsync(OrganizationMember item)
         {
             var query =
-               "delete from organization_members where id = @id";
+                "delete from organization_members where id = @id";
 
             using (var connection = await CreateConnection())
             {
-                await connection.QueryAsync(query, new { id  = item.ID});
+                await connection.QueryAsync(query, new {id = item.ID});
             }
         }
     }

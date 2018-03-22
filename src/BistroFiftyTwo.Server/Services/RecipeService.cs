@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Parser;
@@ -13,14 +11,15 @@ namespace BistroFiftyTwo.Server.Services
     public class RecipeService : IRecipeService
     {
         public RecipeService(IRecipeRepository recipeRepository, IRecipeIngredientRepository recipeIngredientRepository,
-            IStepRepository stepRepository, IRecipeHistoryRepository recipeHistoryRepository, ISecurityService securityService)
+            IStepRepository stepRepository, IRecipeHistoryRepository recipeHistoryRepository,
+            ISecurityService securityService)
         {
             RecipeRepository = recipeRepository;
             RecipeIngredientRepository = recipeIngredientRepository;
             StepRepository = stepRepository;
             RecipeHistoryRepository = recipeHistoryRepository;
             RecipeParser = new RecipeParser(new ParserConfiguration());
-           
+
             SecurityService = securityService;
         }
 
@@ -28,8 +27,8 @@ namespace BistroFiftyTwo.Server.Services
         private IRecipeIngredientRepository RecipeIngredientRepository { get; }
         private IStepRepository StepRepository { get; }
         private IRecipeHistoryRepository RecipeHistoryRepository { get; }
-        private IRecipeParser RecipeParser { get; } 
-        private ISecurityService SecurityService { get; set; }
+        private IRecipeParser RecipeParser { get; }
+        private ISecurityService SecurityService { get; }
 
         public async Task<Recipe> GetByIdAsync(Guid id)
         {
@@ -55,8 +54,9 @@ namespace BistroFiftyTwo.Server.Services
             }
 
             var existingRecipe = await RecipeRepository.GetByKeyAsync(recipe.Key);
-            if(existingRecipe != null && existingRecipe.CreatedBy == recipe.CreatedBy)
-                throw new BistroFiftyTwoDuplicateRecipeException("A recipe with that key already exists.  Edit the existing recipe instead."); //TODO: Once we have update, call update instead.
+            if (existingRecipe != null && existingRecipe.CreatedBy == recipe.CreatedBy)
+                throw new BistroFiftyTwoDuplicateRecipeException(
+                    "A recipe with that key already exists.  Edit the existing recipe instead."); //TODO: Once we have update, call update instead.
 
             var createdRecipe = await RecipeRepository.CreateAsync(recipe);
             var recipeIngredientTasks = new List<Task<RecipeIngredient>>();
@@ -115,11 +115,11 @@ namespace BistroFiftyTwo.Server.Services
 
         public async Task<Recipe> ParseAsync(string input)
         {
-            return await  Parse(input); 
+            return await Parse(input);
         }
 
 
-        public  async Task<Recipe> Parse(string input)
+        public async Task<Recipe> Parse(string input)
         {
             var parseOutput = RecipeParser.Parse(input);
 

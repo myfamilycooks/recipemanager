@@ -8,12 +8,12 @@ namespace BistroFiftyTwo.Server.Services
 {
     public class CacheService : ICacheService
     {
-        protected IDistributedCache DistributedCache { get; set; }
-
         public CacheService(IDistributedCache distributedCache)
         {
             DistributedCache = distributedCache;
         }
+
+        protected IDistributedCache DistributedCache { get; set; }
 
         public async Task SetAsync<T>(string key, T entity, double durationMs) where T : class
         {
@@ -21,7 +21,8 @@ namespace BistroFiftyTwo.Server.Services
 
             var strRep = JsonConvert.SerializeObject(entity);
             var cacheBytes = Encoding.UTF8.GetBytes(strRep);
-            await DistributedCache.SetAsync(key, cacheBytes, new DistributedCacheEntryOptions() { AbsoluteExpirationRelativeToNow = expiry });
+            await DistributedCache.SetAsync(key, cacheBytes,
+                new DistributedCacheEntryOptions {AbsoluteExpirationRelativeToNow = expiry});
         }
 
         public async Task<T> GetAsync<T>(string key)

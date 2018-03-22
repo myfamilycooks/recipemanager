@@ -4,7 +4,7 @@ namespace BistroFiftyTwo.Server.Services
 {
     public class ConfigurationService : IConfigurationService
     {
-        public ConfigurationService(IConfiguration config) 
+        public ConfigurationService(IConfiguration config)
         {
             Configuration = config;
         }

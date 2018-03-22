@@ -13,6 +13,7 @@ namespace BistroFiftyTwo.Server.Repositories
         {
             ConfigurationService = configurationService;
         }
+
         public async Task<RecipeHistory> GetAsync(Guid id)
         {
             var query =
@@ -120,7 +121,7 @@ namespace BistroFiftyTwo.Server.Repositories
 
             using (var connection = await CreateConnection())
             {
-                await connection.ExecuteAsync(query, new { id });
+                await connection.ExecuteAsync(query, new {id});
             }
         }
 

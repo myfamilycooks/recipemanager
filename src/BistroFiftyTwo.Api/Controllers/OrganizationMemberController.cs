@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Api.Models;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BistroFiftyTwo.Api.Controllers
@@ -15,31 +12,32 @@ namespace BistroFiftyTwo.Api.Controllers
     [Route("api/organization/{urlkey}/members")]
     public class OrganizationMemberController : Controller
     {
-        protected IOrganizationService OrganizationService { get; set; }
-        protected ISecurityService SecurityService { get; set; }
-
         public OrganizationMemberController(IOrganizationService organizationService, ISecurityService securityService)
         {
             SecurityService = securityService;
             OrganizationService = organizationService;
         }
 
-        [Route(""), HttpPost]
+        protected IOrganizationService OrganizationService { get; set; }
+        protected ISecurityService SecurityService { get; set; }
+
+        [Route("")]
+        [HttpPost]
         public async Task<IActionResult> AddMember(string urlKey, [FromBody] AddOrganizationMemberModel model)
         {
             if (model.AccountId.Equals(Guid.Empty)) return BadRequest();
 
             var organization = await OrganizationService.GetByUrlKeyAsync(urlKey);
 
-            if (organization == null) return BadRequest();
+            if (organization == null) return BadRequest(BistroFiftyTwoError.Invalid("organization", urlKey));
 
             var member = await OrganizationService.GetMember(organization.ID, model.AccountId);
 
-            if (member != null) return StatusCode((int)HttpStatusCode.Conflict);
+            if (member != null) return StatusCode((int) HttpStatusCode.Conflict);
 
             var createdBy = await SecurityService.GetCurrentUserName();
 
-            var newMember = new OrganizationMember()
+            var newMember = new OrganizationMember
             {
                 OrganizationId = organization.ID,
                 AccountId = model.AccountId,
@@ -54,7 +52,8 @@ namespace BistroFiftyTwo.Api.Controllers
             return Ok();
         }
 
-        [Route(""), HttpPut]
+        [Route("")]
+        [HttpPut]
         public async Task<IActionResult> UpdateMember(string urlKey, [FromBody] UpdateMemberModel model)
         {
             if (model.AccountId.Equals(Guid.Empty)) return BadRequest();

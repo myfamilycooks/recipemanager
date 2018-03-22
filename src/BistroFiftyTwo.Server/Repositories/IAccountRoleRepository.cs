@@ -13,6 +13,6 @@ namespace BistroFiftyTwo.Server.Repositories
         Task<IEnumerable<AccountRole>> GetAllAsync();
         Task<AccountRole> UpdateAsync(AccountRole item);
         Task DeleteAsync(AccountRole item);
-        Task<AccountRole> GetUserRoleAsync(Guid userid, Guid roleId); 
+        Task<AccountRole> GetUserRoleAsync(Guid userid, Guid roleId);
     }
 }

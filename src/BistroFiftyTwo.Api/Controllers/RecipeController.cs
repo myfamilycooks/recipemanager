@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BistroFiftyTwo.Api.Controllers
 {
-
     [Produces("application/json")]
     [Route("api/Recipe")]
     [CustomExceptionFilter]
     public class RecipeController : Controller
     {
-        private IRecipeService RecipeService { get; set; }
-        public RecipeController(IRecipeService recipeService) { RecipeService = recipeService; }
+        public RecipeController(IRecipeService recipeService)
+        {
+            RecipeService = recipeService;
+        }
 
-        [Authorize, Route("{id:guid}"), HttpGet]
+        private IRecipeService RecipeService { get; }
+
+        [Authorize]
+        [Route("{id:guid}")]
+        [HttpGet]
         public async Task<IActionResult> GetById(Guid id)
         {
             try
@@ -24,13 +29,15 @@ namespace BistroFiftyTwo.Api.Controllers
                 var recipe = await RecipeService.GetByIdAsync(id);
                 return Ok(recipe);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }
         }
 
-        [Authorize, Route("{key}"), HttpGet]
+        [Authorize]
+        [Route("{key}")]
+        [HttpGet]
         public async Task<IActionResult> GetByKey(string key)
         {
             try
@@ -44,8 +51,9 @@ namespace BistroFiftyTwo.Api.Controllers
             }
         }
 
-        [Authorize, HttpPost]
-        public async Task<IActionResult> CreateRecipe([FromBody]Recipe recipe)
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> CreateRecipe([FromBody] Recipe recipe)
         {
             try
             {
@@ -54,10 +62,13 @@ namespace BistroFiftyTwo.Api.Controllers
             }
             catch (BistroFiftyTwoDuplicateRecipeException)
             {
-                return StatusCode(409, new { Error = "A recipe with the same title has already been created by you.  Please use a different title"});
+                return StatusCode(409,
+                    new
+                    {
+                        Error =
+                        "A recipe with the same title has already been created by you.  Please use a different title"
+                    });
             }
-
         }
-
     }
 }

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace BistroFiftyTwo.Server.Entities
 {
-   
     public class UserAccount : IBistroEntity
     {
         public string UserLogin { get; set; }

@@ -3,22 +3,29 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Repositories;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace BistroFiftyTwo.Server.Services
 {
     public class OrganizationService : IOrganizationService, IDisposable
     {
-        protected IOrganizationRepository Repository { get; set; }
-        protected IOrganizationMemberRepository MemberRepository { get; set; }
-        protected ISecurityService SecurityService { get; set; }
-        protected ICacheService CacheService { get; set; }
-        public OrganizationService(IOrganizationRepository repository,IOrganizationMemberRepository organizationMemberRepository, ISecurityService securityService, ICacheService cacheService)
+        public OrganizationService(IOrganizationRepository repository,
+            IOrganizationMemberRepository organizationMemberRepository, ISecurityService securityService,
+            ICacheService cacheService)
         {
             Repository = repository;
             MemberRepository = organizationMemberRepository;
             SecurityService = securityService;
             CacheService = cacheService;
+        }
+
+        protected IOrganizationRepository Repository { get; set; }
+        protected IOrganizationMemberRepository MemberRepository { get; set; }
+        protected ISecurityService SecurityService { get; set; }
+        protected ICacheService CacheService { get; set; }
+
+        public void Dispose()
+        {
+            Repository.Dispose();
         }
 
         public async Task<Organization> Get(Guid id)
@@ -60,16 +67,11 @@ namespace BistroFiftyTwo.Server.Services
             var org = await CacheService.GetAsync<Organization>($"ORG${urlKey}");
 
             if (org != null) return org;
-            
+
             org = await Repository.GetByUrlKeyAsync(urlKey);
             CacheService.SetAsync($"ORG${urlKey}", org, 1024 * 30);
 
             return org;
-        }
-
-        public void Dispose()
-        {
-            Repository.Dispose();
         }
 
         public async Task AddMember(OrganizationMember member)
@@ -78,13 +80,12 @@ namespace BistroFiftyTwo.Server.Services
             member.ModifiedBy = await SecurityService.GetCurrentUserName();
             member.CreatedDate = DateTime.UtcNow;
             member.ModifiedDate = DateTime.UtcNow;
-            
+
             await MemberRepository.CreateAsync(member);
         }
 
         public async Task UpdateMember(OrganizationMember member)
         {
-
             member.ModifiedBy = await SecurityService.GetCurrentUserName();
             member.ModifiedDate = DateTime.UtcNow;
 

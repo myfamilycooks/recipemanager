@@ -7,8 +7,7 @@ namespace BistroFiftyTwo.Server.Entities
     {
         public IEnumerable<RecipeSearchResult> Recipes { get; set; }
         public int Skip { get; set; } = 0;
-        public int Count => Enumerable.Count<RecipeSearchResult>(Recipes);
-        public int Take => Enumerable.Count<RecipeSearchResult>(Recipes);
-
+        public int Count => Recipes.Count();
+        public int Take => Recipes.Count();
     }
 }

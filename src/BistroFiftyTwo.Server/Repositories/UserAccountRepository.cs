@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
 using Dapper;
-using Npgsql;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
-    public class UserAccountRepository : BaseRepository,  IUserAccountRepository
+    public class UserAccountRepository : BaseRepository, IUserAccountRepository
     {
         public UserAccountRepository(IConfigurationService configurationService)
         {
             ConfigurationService = configurationService;
         }
- 
+
 
         public async Task<UserAccount> CreateAsync(UserAccount item)
         {
@@ -47,20 +45,18 @@ namespace BistroFiftyTwo.Server.Repositories
         {
             using (var connection = await CreateConnection())
             {
-                await connection.ExecuteAsync("delete from organization_accounts where id = @id", new { id = item.ID });
+                await connection.ExecuteAsync("delete from organization_accounts where id = @id", new {id = item.ID});
             }
-
-           
         }
 
         public async Task<UserAccount> GetAsync(Guid id)
         {
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleAsync<UserAccount>("select * from organization_accounts where id = @id",
-    new { id });
+                return await connection.QuerySingleAsync<UserAccount>(
+                    "select * from organization_accounts where id = @id",
+                    new {id});
             }
-
         }
 
         public async Task<IEnumerable<UserAccount>> GetAllAsync()
@@ -75,8 +71,9 @@ namespace BistroFiftyTwo.Server.Repositories
         {
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleAsync<UserAccount>("select * from organization_accounts where email = @email",
-    new { email });
+                return await connection.QuerySingleAsync<UserAccount>(
+                    "select * from organization_accounts where email = @email",
+                    new {email});
             }
         }
 
@@ -84,8 +81,9 @@ namespace BistroFiftyTwo.Server.Repositories
         {
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleAsync<UserAccount>("select * from organization_accounts where userlogin = @login",
-                new { login });
+                return await connection.QuerySingleAsync<UserAccount>(
+                    "select * from organization_accounts where userlogin = @login",
+                    new {login});
             }
         }
 
@@ -122,14 +120,12 @@ namespace BistroFiftyTwo.Server.Repositories
 
             using (var connection = await CreateConnection())
             {
-            return await connection.QuerySingleAsync<UserAccount>(query, values);
-
+                return await connection.QuerySingleAsync<UserAccount>(query, values);
             }
         }
 
         public void Dispose()
         {
-   
         }
     }
 }

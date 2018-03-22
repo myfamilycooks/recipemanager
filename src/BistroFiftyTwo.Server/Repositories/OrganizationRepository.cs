@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
 using BistroFiftyTwo.Server.Services;
@@ -9,14 +8,13 @@ using Dapper.Contrib.Extensions;
 
 namespace BistroFiftyTwo.Server.Repositories
 {
-   
-
     public class OrganizationRepository : BaseRepository, IOrganizationRepository
     {
         public OrganizationRepository(IConfigurationService configurationService)
         {
             ConfigurationService = configurationService;
         }
+
         public async Task<Organization> GetAsync(Guid id)
         {
             using (var connection = await CreateConnection())
@@ -59,7 +57,7 @@ namespace BistroFiftyTwo.Server.Repositories
         {
             using (var connection = await CreateConnection())
             {
-                await connection.UpdateAsync<Organization>(item);
+                await connection.UpdateAsync(item);
             }
 
             return await GetByUrlKeyAsync(item.UrlKey);
@@ -75,19 +73,16 @@ namespace BistroFiftyTwo.Server.Repositories
 
         public async Task<Organization> GetByUrlKeyAsync(string urlKey)
         {
-
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleOrDefaultAsync<Organization>("select * from organizations where urlkey = @urlkey",
-        new { urlkey = urlKey });
+                return await connection.QuerySingleOrDefaultAsync<Organization>(
+                    "select * from organizations where urlkey = @urlkey",
+                    new {urlkey = urlKey});
             }
-
         }
 
         public void Dispose()
         {
         }
     }
-
-    
 }

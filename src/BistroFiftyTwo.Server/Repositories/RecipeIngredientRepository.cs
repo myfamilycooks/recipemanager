@@ -11,7 +11,7 @@ namespace BistroFiftyTwo.Server.Repositories
     {
         private bool disposedValue; // To detect redundant calls
 
-        public RecipeIngredientRepository(IConfigurationService configurationService) 
+        public RecipeIngredientRepository(IConfigurationService configurationService)
         {
             ConfigurationService = configurationService;
         }

@@ -9,7 +9,7 @@ namespace BistroFiftyTwo.Api.Controllers
         {
             var exception = context.Exception;
 #if DEBUG
-            context.Result = new JsonResult(new { Message = exception.Message, StackTrace = exception.StackTrace });
+            context.Result = new JsonResult(new {exception.Message, exception.StackTrace});
 #else
             context.Result = new JsonResult(exception.Message);
 #endif

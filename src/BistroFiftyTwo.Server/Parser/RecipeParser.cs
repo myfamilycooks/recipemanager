@@ -43,7 +43,7 @@ namespace BistroFiftyTwo.Server.Parser
                 var scanner = new RecipeScanner(Configuration);
                 var scannedRecipe = scanner.Scan(input);
 
-                if (String.IsNullOrEmpty(scannedRecipe.Title))
+                if (string.IsNullOrEmpty(scannedRecipe.Title))
                     result.Output.Title = "Untitled Recipe";
                 else
                     result.Output.Title = scannedRecipe.Title.Trim();
@@ -170,7 +170,6 @@ namespace BistroFiftyTwo.Server.Parser
                 {
                     result.Errors.Add(ParseError.FromException(ex, c));
                 }
-               
             });
 
             result.Output.Ingredients = ingredients;
