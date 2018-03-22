@@ -28,36 +28,74 @@ namespace BistroFiftyTwo.Api.Controllers
         [AllowAnonymous, Route("new"), HttpPost]
         public async Task<IActionResult> CreateAccount([FromBody] CreateAccountModel createAccount)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 //nts if this should go to a fluent validation thing...
-                if (String.IsNullOrEmpty(createAccount.Email)) return BadRequest();
-                if (String.IsNullOrEmpty(createAccount.FullName)) return BadRequest();
-                if (String.IsNullOrEmpty(createAccount.Login)) return BadRequest();
-                if (String.IsNullOrEmpty(createAccount.Password)) return BadRequest();
+                if (String.IsNullOrEmpty(createAccount.Email)) return StatusCode(409, BistroFiftyTwoError.MissingField("email"));
+                if (String.IsNullOrEmpty(createAccount.FullName)) return BadRequest(BistroFiftyTwoError.MissingField("fullname"));
+                if (String.IsNullOrEmpty(createAccount.Login)) return BadRequest(BistroFiftyTwoError.MissingField("login"));
+                if (String.IsNullOrEmpty(createAccount.Password)) return BadRequest(BistroFiftyTwoError.MissingField("password"));
 
                 var inviteCode = default(Guid);
-                if (!Guid.TryParse(createAccount.InvitationCode, out inviteCode)) return BadRequest();
+                if (!Guid.TryParse(createAccount.InvitationCode, out inviteCode)) return BadRequest(BistroFiftyTwoError.MissingField("invitationCode"));
                 
                 // for now do the stupid, just hard code the inivite code.
-                if (inviteCode != Guid.Parse(Configuration["InvitationCode"])) return Forbid();
+            if (inviteCode != Guid.Parse(Configuration["InvitationCode"]))
+                return BadRequest(BistroFiftyTwoError.Invalid("invitationCode", createAccount.InvitationCode));
 
-                var newUserAccount = new UserAccount()
-                {
-                    Email =  createAccount.Email,
-                    Fullname = createAccount.FullName,
-                    UserLogin = createAccount.Login,
-                    AccountPassword = createAccount.Password
-                };
+            var newUserAccount = new UserAccount()
+            {
+                Email =  createAccount.Email,
+                Fullname = createAccount.FullName,
+                UserLogin = createAccount.Login,
+                AccountPassword = createAccount.Password
+            };
                 
-                var userAccount = await UserAccountService.Create(newUserAccount);
+            var userAccount = await UserAccountService.Create(newUserAccount);
 
-                await RoleService.GrantDefaultRoles(userAccount.ID);
+            await RoleService.GrantDefaultRoles(userAccount.ID);
 
-                return Created($"api/accounts/{userAccount.ID}", userAccount);
-            }
+            var securedAccount = new SecuredUserAccount
+            {
+                Email = userAccount.Email,
+                Fullname = userAccount.Fullname,
+                ID = userAccount.ID,
+                IsDisabled = userAccount.IsDisabled,
+                IsLocked = userAccount.IsLocked,
+                UserLogin = userAccount.UserLogin
+            };
 
-            return BadRequest();
+                return Created($"api/accounts/{userAccount.ID}", securedAccount);
+            //}
+
+            //return BadRequest();
+        }
+    }
+
+    public class BistroFiftyTwoError
+    {
+        public string ErrorType { get; set; }
+        public string Description { get; set; }
+        public string FieldName { get; set; }
+
+        public static BistroFiftyTwoError MissingField(string fieldName)
+        {
+            return new BistroFiftyTwoError()
+            {
+                ErrorType = "Missing Required Data",
+                Description = $"{fieldName} is required and is missing",
+                FieldName = fieldName
+            };
+        }
+
+        public static BistroFiftyTwoError Invalid(string fieldName, string value)
+        {
+            return new BistroFiftyTwoError()
+            {
+                ErrorType = "Invalid Required Data",
+                Description = $"{fieldName} is invalid.  {value} is not valid",
+                FieldName = fieldName
+            };
         }
     }
 }
