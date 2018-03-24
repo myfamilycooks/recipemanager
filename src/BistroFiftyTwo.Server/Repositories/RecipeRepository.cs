@@ -95,7 +95,7 @@ namespace BistroFiftyTwo.Server.Repositories
         {
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleAsync<Recipe>("select * from recipes where key = @key", new {key});
+                return await connection.QuerySingleOrDefaultAsync<Recipe>("select * from recipes where key = @key", new {key});
             }
         }
 
