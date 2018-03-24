@@ -9,5 +9,6 @@ namespace BistroFiftyTwo.Server.Repositories
     {
         Task<Recipe> GetByKeyAsync(string key);
         Task<IEnumerable<Recipe>> Search(string query);
+        Task<IEnumerable<Suggestion>> Suggestions();
     }
 }

@@ -18,10 +18,10 @@ namespace BistroFiftyTwo.Api.Controllers
         private ISearchService SearchService { get; }
 
         [Authorize]
-        [HttpGet("recipes")]
-        public async Task<IActionResult> Recipes()
+        [HttpGet("suggestions")]
+        public async Task<IActionResult> Suggestions(string term)
         {
-            return Ok(await SearchService.SearchRecipes(null));
+            return Ok(await SearchService.Suggestions(term));
         }
 
         [Authorize]
