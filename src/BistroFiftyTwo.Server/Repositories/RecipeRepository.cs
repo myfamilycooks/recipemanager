@@ -111,6 +111,15 @@ namespace BistroFiftyTwo.Server.Repositories
             }
         }
 
+        public async Task<IEnumerable<Suggestion>> Suggestions()
+        {
+            var sqlQuery = @"select distinct ingredient as term, 'ingredient' as category from recipe_ingredients   union select title as term, 'recipe' as category from recipes;";
+            using (var connection = await CreateConnection())
+            {
+                return await connection.QueryAsync<Suggestion>(sqlQuery);
+            }
+        }
+
         #region IDisposable Support
 
         private bool disposedValue; // To detect redundant calls
