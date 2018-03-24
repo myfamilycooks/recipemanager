@@ -11,6 +11,7 @@ namespace BistroFiftyTwo.Api.Controllers
 {
     [Produces("application/json")]
     [Route("api/account")]
+    [CustomExceptionFilter]
     public class AccountController : Controller
     {
         public AccountController(IUserAccountService userAccountService, IRoleService roleService,
@@ -53,6 +54,18 @@ namespace BistroFiftyTwo.Api.Controllers
                 UserLogin = createAccount.Login,
                 AccountPassword = createAccount.Password
             };
+
+            var existingAccount = await UserAccountService.GetByLogin(newUserAccount.UserLogin);
+
+            if (existingAccount != null)
+            {
+                return BadRequest(new BistroFiftyTwoError
+                {
+                    FieldName = "login",
+                    ErrorType = "duplicate",
+                    Description = $"{createAccount.Login} is already taken.  Please choose another login name"
+                });
+            }
 
             var userAccount = await UserAccountService.Create(newUserAccount);
 

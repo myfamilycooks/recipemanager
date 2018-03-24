@@ -8,6 +8,7 @@ namespace BistroFiftyTwo.Api.Controllers
         public override void OnException(ExceptionContext context)
         {
             var exception = context.Exception;
+            context.HttpContext.Response.StatusCode = 500;
 #if DEBUG
             context.Result = new JsonResult(new {exception.Message, exception.StackTrace});
 #else

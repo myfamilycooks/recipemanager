@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BistroFiftyTwo.Api.Controllers
 {
+    [Produces("application/json")]
     public class TokenController : Controller
     {
         public TokenController(IUserAccountService userAccountService, IRoleService roleService,
@@ -30,6 +31,7 @@ namespace BistroFiftyTwo.Api.Controllers
         [AllowAnonymous]
         [Route("token")]
         [HttpPost]
+        [CustomExceptionFilter]
         public async Task<IActionResult> Post([FromBody] LoginViewModel loginViewModel)
         {
             if (!ModelState.IsValid) return BadRequest();
