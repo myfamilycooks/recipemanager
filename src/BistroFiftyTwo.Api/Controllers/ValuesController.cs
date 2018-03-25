@@ -9,6 +9,7 @@ namespace BistroFiftyTwo.Api.Controllers
     public class ValuesController : Controller
     {
         // GET api/values
+        [AllowAnonymous]
         [HttpGet]
         public IEnumerable<string> Get()
         {

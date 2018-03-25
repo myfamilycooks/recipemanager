@@ -27,7 +27,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:60679/"
+      "applicationUrl": "http://192.168.1.111:60679/"
     },
     "IIS": {
       "commandName": "IIS",

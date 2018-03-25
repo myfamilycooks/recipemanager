@@ -27,6 +27,7 @@ namespace BistroFiftyTwo.Server.Entities
         public DateTime ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
 
+        public string ImageUrl { get; set; } = "https://myfamilycooks.blob.core.windows.net/recipe/ingredients.jpg";
         public List<string> Columns()
         {
             return GetType()
