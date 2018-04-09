@@ -1,4 +1,4 @@
-BEGIN;
+--BEGIN;
 
 		create table organizations (
 			id uuid not null default(uuid_generate_v4()),
@@ -51,4 +51,4 @@ BEGIN;
 
         create unique index unq_members_accountorg on organization_members (accountid, organizationid);
 
-COMMIT;
+--COMMIT;
