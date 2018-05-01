@@ -6,3 +6,23 @@ services:
     build:
       context: ./src/BistroFiftyTwo.Api
       dockerfile: Dockerfile
+    networks:
+      infranet:
+        aliases:
+          - 'api'
+  postgres:
+    env_file:
+      - ./infrastructure/db/database.env
+    restart: 'always'
+    ports:
+      - '5432:5432'
+    build: 
+      context: ./infrastructure/db
+      dockerfile: Dockerfile
+    networks:
+      infranet:
+        aliases:
+          - 'postgres'
+
+networks:
+  infranet:

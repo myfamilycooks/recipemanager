@@ -1,8 +1,9 @@
-create extension "uuid-ossp";
+
 
 create or replace function dbc_0_0_0() returns void as
 $$
 BEGIN
+	create extension if not exists "uuid-ossp";
 	if not exists(select * from information_schema.tables
 		      where table_catalog = CURRENT_CATALOG AND
 			table_schema = CURRENT_SCHEMA AND

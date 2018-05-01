@@ -254,3 +254,5 @@ paket-files/
 **/appsettings.development.json
 **/appsettings.staging.json
 **/appsettings.production.json
+
+*.env
