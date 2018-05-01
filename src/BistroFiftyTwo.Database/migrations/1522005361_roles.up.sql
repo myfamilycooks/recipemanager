@@ -1,4 +1,4 @@
-begin;
+--0begin;
 
     	create table role_definitions (
 			id uuid not null default(uuid_generate_v4()),
@@ -24,4 +24,4 @@ begin;
 			constraint fk_accountrole_roles foreign key (roleid) references role_definitions (id)
 		);
 
-commit;
+--commit;

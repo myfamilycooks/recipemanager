@@ -1,4 +1,4 @@
-BEGIN;
+--BEGIN;
 		alter table recipe_steps add instructions text not null;
 		alter table recipe_steps drop column step;
 
@@ -19,4 +19,4 @@ BEGIN;
 		create index idx_fts_recipe_search on recipe_histories using gin(document);
 		
 		
-COMMIT;
+--COMMIT;

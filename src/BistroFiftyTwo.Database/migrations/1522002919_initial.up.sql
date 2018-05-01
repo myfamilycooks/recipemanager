@@ -1,5 +1,5 @@
-BEGIN;
-    create extension "uuid-ossp";
+--BEGIN;
+    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
     create table recipes (
         id uuid not null default(uuid_generate_v4()),
         title text not null,
@@ -42,4 +42,4 @@ BEGIN;
         constraint pk_recioe_ingredients_id primary key (id),
         constraint fk_recioe_ingredients_recipes foreign key (recipeid) references recipes (id)
     );
-COMMIT;
+--COMMIT;

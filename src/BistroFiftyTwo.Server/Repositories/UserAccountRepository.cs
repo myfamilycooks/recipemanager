@@ -71,7 +71,7 @@ namespace BistroFiftyTwo.Server.Repositories
         {
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleAsync<UserAccount>(
+                return await connection.QuerySingleOrDefaultAsync<UserAccount>(
                     "select * from organization_accounts where email = @email",
                     new {email});
             }
@@ -81,7 +81,7 @@ namespace BistroFiftyTwo.Server.Repositories
         {
             using (var connection = await CreateConnection())
             {
-                return await connection.QuerySingleAsync<UserAccount>(
+                return await connection.QuerySingleOrDefaultAsync<UserAccount>(
                     "select * from organization_accounts where userlogin = @login",
                     new {login});
             }
