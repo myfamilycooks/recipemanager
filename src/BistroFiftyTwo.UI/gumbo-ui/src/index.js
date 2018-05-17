@@ -1,9 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+
+import { store } from './_helpers';
 import { App } from './App';
+
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
+import './_include/bootstrap';
+ 
+
+
+render(
+    <Provider store={store}>
+        <App />
+    </Provider>, 
+    document.getElementById('root')
+);
+
+    registerServiceWorker();
 // based on http://jasonwatmore.com/post/2017/09/16/react-redux-user-registration-and-login-tutorial-example
