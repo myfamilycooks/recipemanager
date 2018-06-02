@@ -6,12 +6,12 @@ pipeline {
     stages {
         stage('restore') {
             steps {
-                bat 'dotnet restore --configfile NuGet.Config'
+                sh 'dotnet restore'
             }
         }
         stage('build') {
             steps {
-                bat 'dotnet build'
+                sh 'dotnet build'
             }
         }
     }
