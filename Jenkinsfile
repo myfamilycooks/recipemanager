@@ -3,9 +3,6 @@ pipeline {
     environment {
         myVersion = '0.9'
     }
-    tools {
-        msbuild '.NET Core 2.0.0'
-    }
     stages {
         stage('restore') {
             steps {
