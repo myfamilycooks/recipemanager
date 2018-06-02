@@ -6,12 +6,12 @@ pipeline {
     stages {
         stage('restore') {
             steps {
-                sh 'dotnet restore'
+                sh 'dotnet restore ./BistroFiftyTwo.NoDocker.sln'
             }
         }
         stage('build') {
             steps {
-                sh 'dotnet build'
+                sh 'dotnet build ./BistroFiftyTwo.NoDocker.sln'
             }
         }
     }
