@@ -7,7 +7,6 @@ pipeline {
         msbuild '.NET Core 2.0.0'
     }
     stages {
-        
         stage('restore') {
             steps {
                 bat 'dotnet restore --configfile NuGet.Config'
