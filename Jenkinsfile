@@ -4,14 +4,9 @@ pipeline {
         myVersion = '0.9'
     }
     stages {
-        stage('restore') {
-            steps {
-                sh 'dotnet restore ./BistroFiftyTwo.NoDocker.sln'
-            }
-        }
         stage('build') {
             steps {
-                sh 'dotnet build ./BistroFiftyTwo.NoDocker.sln'
+                sh 'docker-compose -f ./docker-compose.ci.build.yml up'
             }
         }
     }
