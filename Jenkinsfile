@@ -7,6 +7,7 @@ pipeline {
         stage('build api') {
             steps {
                 sh 'docker-compose -f ./docker-compose.ci.build.yml up'
+                sh 'sudo chown -R jenkins:jenkins .'
             }
         }
         stage('build ui') {
