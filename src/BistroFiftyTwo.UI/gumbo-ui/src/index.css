@@ -1,5 +1,1 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-}
+.loginForm {   width: 420px;    margin: 0 auto;    z-index: 99;    display: block;    margin-top: 5%;    background: transparent;    border-radius: .25em .25em .4em .4em;    text-align: center;    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);    color: #fff;}
