@@ -91,6 +91,8 @@ namespace BistroFiftyTwo.Server.Services
         {
             var userAccount = await Repository.GetByLoginAsync(login);
 
+            if (userAccount == null) return null;
+
             if (userAccount.PasswordFormat != (int) PasswordFormat.Hashed)
                 if (userAccount.AccountPassword.Equals(password))
                     return userAccount;

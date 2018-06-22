@@ -1,7 +1,11 @@
-FROM microsoft/aspnetcore:2.0
+FROM microsoft/dotnet:2.1-aspnetcore-runtime
 ARG source
 WORKDIR /app
 EXPOSE 80
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libunwind8 \
+    && rm -rf /var/lib/apt/lists/*
 ENV ASPNETCORE_ENVIRONMENT Development
 COPY ${source:-obj/Docker/publish} .
 ENTRYPOINT ["dotnet", "BistroFiftyTwo.Api.dll"]
+ 
