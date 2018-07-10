@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BistroFiftyTwo.Api.Models;
 using BistroFiftyTwo.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,7 @@ namespace BistroFiftyTwo.Api.Controllers
             var claimsList = (from c in claimsUser.Claims
                 select new KeyValuePair<string, string>(c.Type, c.Value)).ToList();
 
-            return Ok(new {user = actualUser, claims = claimsList});
+            return Ok(new {user = new SecuredUserAccount(actualUser), claims = claimsList});
         }
 
         [Route("Secure")]
