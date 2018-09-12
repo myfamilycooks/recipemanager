@@ -2,9 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BistroFiftyTwo.Server.Entities;
-using BistroFiftyTwo.Server.Repositories;
-using Fclp.Internals.Extensions;
-
+using BistroFiftyTwo.Server.Repositories; 
 namespace BistroFiftyTwo.Server.Services
 {
     public class SearchService : ISearchService
@@ -25,7 +23,7 @@ namespace BistroFiftyTwo.Server.Services
                 Recipes = new List<RecipeSearchResult>()
             };
 
-            recipes.ForEach(r =>
+            recipes.ToList().ForEach(r =>
             {
                 ((List<RecipeSearchResult>) results.Recipes).Add(new RecipeSearchResult
                 {

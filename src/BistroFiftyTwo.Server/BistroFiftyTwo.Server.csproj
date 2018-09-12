@@ -7,15 +7,14 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="autofac" Version="4.8.1" />
-    <PackageReference Include="dapper.contrib" Version="1.50.5" />
-    <PackageReference Include="FluentCommandLineParser" Version="1.4.3" /> 
+    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="dapper.contrib" Version="1.50.5" /> 
     <PackageReference Include="microsoft.aspnetcore.cryptography.keyderivation" Version="2.1.1" /> 
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.1" />
     <PackageReference Include="microsoft.extensions.configuration" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="npgsql" Version="4.0.0" />
-    <PackageReference Include="System.IdentityModel.TOkens.Jwt" Version="5.2.2" />
+    <PackageReference Include="npgsql" Version="4.0.2" />
+    <PackageReference Include="System.IdentityModel.TOkens.Jwt" Version="5.2.4" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>

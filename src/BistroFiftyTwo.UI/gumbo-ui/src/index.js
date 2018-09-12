@@ -9,8 +9,6 @@ import registerServiceWorker from './registerServiceWorker';
 
 import './_include/bootstrap';
  
-
-
 render(
     <Provider store={store}>
         <App />
