@@ -1,57 +1,52 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+//@flow
+import React from "react";
+import { connect } from "react-redux";
+import { recipeActions } from "../_actions";
+import FeaturedRecipes from "./featuredRecipes";
 
-import { userActions } from '../_actions';
+type Props = {
+  dispatch: Function,
+  recipes: Array<Object>
+};
 
-class HomePage extends React.Component {
-    componentDidMount() {
-        this.props.dispatch(userActions.getAll());
-    }
+class HomePage extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+  }
+  componentDidMount() {
+    this.props.dispatch(recipeActions.getFeatured());
+  }
 
-    handleDeleteUser(id) {
-        return (e) => this.props.dispatch(userActions.delete(id));
-    }
+  render() {
+    const featured = this.props.recipes.featured || { recipes: [] };
 
-    render() {
-        const { user, users } = this.props;
-        return (
-            <div className="col-md-6 col-md-offset-3">
-                <h1>Hi {user.firstName}!</h1>
-                <p>You're logged in with React</p>
-                <h3>All Registered Users:</h3>
-                {users.loading && <em>Loading Users..</em>}
-                {users.error && <span className="text-danger">ERROR: {users.error}</span>}
-                {users.items && 
-                    <ul>
-                        {users.items.map((user, index) =>
-                            <li key={user.id}>
-                                {user.firstName + ' ' + user.lastName}
-                                {
-                                    user.deleting ? <em> - Deleting...</em>
-                                    : user.deleteError ? <span className="text-danger"> - ERROR: {user.deleteError}</span>
-                                    : <span> - <a onClick={this.handleDeleteUser(user.id)}>Delete</a></span>
-                                }
-                            </li>
-                        )}
-                        </ul>
-
-                }
-                <p>
-                    <Link to="/login">Logout</Link>
-                    </p>
-            </div>
-        );
-    }
+    return (
+      <div className="mfc-homepage-main">
+        <div className="container">
+          <h2>Recipe Manager</h2>
+          <div className="mfc-recipes-featured">
+            <FeaturedRecipes recipes={featured.recipes} />
+            {featured.recipes.map(r => (
+              <div key={r.id}>
+                <h4>{r.name}</h4>
+                <p>{r.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 function mapStateToProps(state) {
-    const { users, authentication } = state;
-    const { user } = authentication;
-    return {
-        user, users
-    };
+  const { recipes, authentication } = state;
+  const { user } = authentication;
+  return {
+    user,
+    recipes
+  };
 }
 
 const connectedHomePage = connect(mapStateToProps)(HomePage);
-export { connectedHomePage as HomePage};
+export { connectedHomePage as HomePage };

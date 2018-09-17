@@ -1,15 +1,16 @@
-import { combineReducers } from 'redux';
-
-import { authentication } from './authentication.reducer';
-import { registration } from './registration.reducer';
-import { users } from './users.reducer';
-import { alert } from './alert.reducer';
+import { combineReducers } from "redux";
+import { alert } from "./alert.reducer";
+import { authentication } from "./authentication.reducer";
+import { recipes } from "./recipe.reducer";
+import { registration } from "./registration.reducer";
+import { users } from "./users.reducer";
 
 const rootReducer = combineReducers({
   authentication,
   registration,
   users,
-  alert
+  alert,
+  recipes
 });
 
 export default rootReducer;

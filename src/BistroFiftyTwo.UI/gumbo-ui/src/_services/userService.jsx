@@ -12,7 +12,7 @@ export const userService = {
 };
 
 function login(username, password) {
-  axios
+  return axios
     .post(`${config.apiUrl}/token`, { username, password })
     .catch(handleError)
     .then(handleResponse)
@@ -20,6 +20,8 @@ function login(username, password) {
       if (user.token) {
         localStorage.setItem(config.userItem, JSON.stringify(user));
       }
+
+      return user;
     });
 }
 

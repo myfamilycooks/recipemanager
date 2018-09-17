@@ -16,7 +16,10 @@ namespace BistroFiftyTwo.Server.Entities
         public string Key { get; set; }
         public string Tags { get; set; }
         public string Description { get; set; }
+        public string ShortDescription { get; set; }
         public string Notes { get; set; }
+        public bool Featured { get; set; }
+
         public IEnumerable<RecipeIngredient> Ingredients { get; set; }
         public IEnumerable<Step> Steps { get; set; }
         public Guid FullTextReference { get; set; }
@@ -26,7 +29,7 @@ namespace BistroFiftyTwo.Server.Entities
         public string CreatedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
         public string ModifiedBy { get; set; }
-
+        
         public string ImageUrl { get; set; } = "https://myfamilycooks.blob.core.windows.net/recipe/ingredients.jpg";
         public List<string> Columns()
         {

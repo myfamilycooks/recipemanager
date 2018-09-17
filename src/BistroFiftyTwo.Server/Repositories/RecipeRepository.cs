@@ -61,10 +61,12 @@ namespace BistroFiftyTwo.Server.Repositories
         public async Task<Recipe> UpdateAsync(Recipe item)
         {
             var query =
-                @"update recipes set title = @title, key = @key, tags = @tags, description = @description, notes = @notes, modifiedby = @modifiedby, modifieddate = now() where id = @id returning *";
+                @"update recipes set title = @title, featured = @featured, shortdescription = @shortdescription, key = @key, tags = @tags, description = @description, notes = @notes, modifiedby = @modifiedby, modifieddate = now() where id = @id returning *";
 
             var record = new
             {
+                featured = item.Featured, 
+                shortdescription = item.ShortDescription,
                 id = item.ID,
                 title = item.Title,
                 key = item.Key,

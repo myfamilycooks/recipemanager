@@ -30,7 +30,11 @@ namespace BistroFiftyTwo.Server.Services
                     Id = r.ID,
                     Description = r.Description,
                     Name = r.Title,
-                    Url = $"/api/recipe/{r.Key}"
+                    Url = $"/api/recipe/{r.Key}",
+                    ShortDescription = string.IsNullOrEmpty(r.ShortDescription) ? r.Description : r.ShortDescription,
+                    Featured = r.Featured,
+                    Key = r.Key
+
                 });
             });
 
