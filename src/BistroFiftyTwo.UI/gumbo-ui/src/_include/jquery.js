@@ -1,3 +1,4 @@
-import * as $ from 'jquery'
+//@flow
+import * as $ from "jquery";
 
-window.jQuery = window.$ = $
+window.jQuery = window.$ = $;

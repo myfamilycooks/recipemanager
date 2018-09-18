@@ -1,1 +1,2 @@
-export * from './App';
+//@flow
+export * from "./App";

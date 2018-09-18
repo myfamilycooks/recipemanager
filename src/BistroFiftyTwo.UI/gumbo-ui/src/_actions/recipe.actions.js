@@ -1,3 +1,4 @@
+//@flow
 import { recipeConstants } from "../_constants";
 import { recipeService } from "../_services";
 

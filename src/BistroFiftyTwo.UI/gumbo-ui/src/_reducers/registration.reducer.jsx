@@ -1,4 +1,5 @@
-import { userConstants } from '../_constants';
+//@flow
+import { userConstants } from "../_constants";
 
 export function registration(state = {}, action) {
   switch (action.type) {
@@ -9,6 +10,6 @@ export function registration(state = {}, action) {
     case userConstants.REGISTER_FAILURE:
       return {};
     default:
-      return state
+      return state;
   }
 }

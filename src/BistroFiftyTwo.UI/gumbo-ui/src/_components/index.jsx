@@ -1,1 +1,2 @@
-export * from './privateRoute';
+//@flow
+export * from "./privateRoute";

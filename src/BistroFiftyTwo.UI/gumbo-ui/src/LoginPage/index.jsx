@@ -1,1 +1,2 @@
-export * from './loginPage';
+//@flow
+export * from "./loginPage";

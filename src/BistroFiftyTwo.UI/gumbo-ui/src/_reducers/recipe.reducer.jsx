@@ -1,3 +1,4 @@
+//@flow
 import { recipeConstants } from "../_constants";
 
 export function recipes(state = {}, action) {

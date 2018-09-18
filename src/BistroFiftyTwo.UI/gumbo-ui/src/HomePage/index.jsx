@@ -1,1 +1,2 @@
-export * from './HomePage';
+//@flow
+export * from "./HomePage";
