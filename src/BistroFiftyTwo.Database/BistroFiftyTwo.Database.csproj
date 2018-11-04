@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="scripts\0001_initial.sql" />
+    <None Remove="scripts\0002_histories.up.sql" />
+    <None Remove="scripts\0003_organizations.sql" />
+    <None Remove="scripts\0004_roles.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="scripts\0001_initial.sql" />
+    <EmbeddedResource Include="scripts\0002_histories.up.sql" />
+    <EmbeddedResource Include="scripts\0003_organizations.sql" />
+    <EmbeddedResource Include="scripts\0004_roles.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dbup-postgresql" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>

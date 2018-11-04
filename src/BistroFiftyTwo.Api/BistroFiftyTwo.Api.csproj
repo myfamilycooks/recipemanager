@@ -22,6 +22,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BistroFiftyTwo.Database\BistroFiftyTwo.Database.csproj" />
     <ProjectReference Include="..\BistroFiftyTwo.Server\BistroFiftyTwo.Server.csproj" />
   </ItemGroup>
 

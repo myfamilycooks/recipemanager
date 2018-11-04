@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BistroFiftyTwo.Database\BistroFiftyTwo.Database.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="FluentCommandLineParser">
       <HintPath>..\..\..\..\..\..\Users\Scott Sargent\.nuget\packages\fluentcommandlineparser\1.4.3\lib\net35\FluentCommandLineParser.dll</HintPath>
     </Reference>

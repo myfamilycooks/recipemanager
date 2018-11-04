@@ -4,6 +4,7 @@ using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BistroFiftyTwo.Server;
+using BistroFiftyTwo.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -76,6 +77,8 @@ namespace BistroFiftyTwo.Api
             builder.RegisterModule<BistroFiftyTwoServerModule>();
             ApplicationContainer = builder.Build();
 
+            BistroFiftyTwo.Database.SchemaManager.Upgrade(Configuration["Data:RecipeX:ConnectionString"]);
+ 
             return new AutofacServiceProvider(ApplicationContainer);
         }
 
